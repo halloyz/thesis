@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="ors-js-client.js"></script>
+
+    <script>
+      window.onload = function() {
+        // Add your api_key here
+        let orsDirections = new Openrouteservice.Directions({ api_key: "5b3ce3597851110001cf6248733a96d9c13a4d91994d48edeb3bf8aa"});
+    
+        orsDirections.calculate({
+          coordinates: [[8.690958, 49.404662], [8.687868, 49.390139]],
+          profile: "driving-car",
+          extra_info: ["waytype", "steepness"],
+          format: "json"
+        })
+        .then(function(json) {
+            // Add your own result handling here
+            a = JSON.stringify(json);
+          })
+        .catch(function(err) {
+          console.error(err);
+        });
+      };
+    
+    </script></head>
+<body>
+</body>
+</html>

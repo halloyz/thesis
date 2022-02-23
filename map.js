@@ -4,10 +4,12 @@ let {Viewer, SimpleMarker} = mapillary;
 let viewer = new Viewer({
   accessToken: 'MLY|5055210414499610|cc32fb072365a29201fee81cf2d9e241',
   container: 'mly', // the ID of our container defined in the HTML body
-  imageId: '740655373279080',
+  // imageId: '740655373279080',
+  imageId: '629938335070911',
   component: { marker: true, cover: false }
 });
-viewer.setFilter(["==", "cameraType", 'spherical'], ["==", "creatorId", "gisfrb"]);
+// viewer.setFilter(["==", "cameraType", 'spherical'], ["==", "creatorId", "gisfrb"]);
+viewer.setFilter(["==", "cameraType", 'spherical'],["==", "sequenceKey", "DkKRnE0Wuj58hdukO82mxg"]);
 let targetLat = 55.680763888889
 let targetLng = 12.560666666667
 
@@ -20,6 +22,8 @@ let defaultMarker = new SimpleMarker(
 
 markerComponent.add([defaultMarker]);
 
+sequence_id = GET https://graph.mapillary.com/image_ids?sequence_id=DkKRnE0Wuj58hdukO82mxg;
+console.log(sequence_id);
 
 playAudio()
 
