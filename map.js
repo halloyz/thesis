@@ -5,13 +5,16 @@ let viewer = new Viewer({
   accessToken: 'MLY|5055210414499610|cc32fb072365a29201fee81cf2d9e241',
   container: 'mly', // the ID of our container defined in the HTML body
   // imageId: '740655373279080',
-  imageId: '629938335070911',
+  imageId: '766958267354889',
   component: { marker: true, cover: false }
 });
 // viewer.setFilter(["==", "cameraType", 'spherical'], ["==", "creatorId", "gisfrb"]);
 viewer.setFilter(["==", "cameraType", 'spherical'],["==", "sequenceKey", "DkKRnE0Wuj58hdukO82mxg"]);
 let targetLat = 55.680763888889
 let targetLng = 12.560666666667
+
+let targetLat2 = 55.67924758911006
+let targetLng2 = 12.57758973733007
 
 const markerComponent = viewer.getComponent("marker");
 viewer.activateComponent("marker");
@@ -20,12 +23,21 @@ let defaultMarker = new SimpleMarker(
     "id-1",
     {lat: targetLat, lng: targetLng});
 
+let targetMarker = new SimpleMarker(
+    "id-2",
+    {lat: targetLat2, lng: targetLng2});
+
 markerComponent.add([defaultMarker]);
+markerComponent.add([targetMarker]);
 
-sequence_id = GET https://graph.mapillary.com/image_ids?sequence_id=DkKRnE0Wuj58hdukO82mxg;
-console.log(sequence_id);
 
-playAudio()
+$(document).ready(function(){
+  let sequence_id = $.get("https://graph.mapillary.com/image_ids?sequence_id=DkKRnE0Wuj58hdukO82mxg&access_token=MLY|5055210414499610|cc32fb072365a29201fee81cf2d9e241")
+  console.log(JSON.stringify(sequence_id));
+})
+
+
+//playAudio()
 
 viewer.on('position', async (event) => {
   let position =  viewer.getPosition();
