@@ -28,13 +28,13 @@ const whiteNoiseSource = ctx.createBufferSource();
 
 
 
-function playAudio(){
-    whiteNoiseSource.buffer = buffer;
-    whiteNoiseSource.connect(filter)
-    whiteNoiseSource.connect(myPanner)
-    whiteNoiseSource.loop = true;
-   whiteNoiseSource.start();
-}
+// function playAudio(){
+//     whiteNoiseSource.buffer = buffer;
+//     whiteNoiseSource.connect(filter)
+//     whiteNoiseSource.connect(myPanner)
+//     whiteNoiseSource.loop = true;
+//    whiteNoiseSource.start();
+// }
 
 function stopAudio(){
     whiteNoiseSource.stop();
@@ -49,5 +49,7 @@ let options = {
 
 //myPanner.pan.value = 1;
 //const listener = ctx.listener;
+
+
 
 
