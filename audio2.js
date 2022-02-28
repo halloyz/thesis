@@ -1,4 +1,5 @@
 
+
 const audioCtx = new AudioContext();
 var panner = audioCtx.createPanner();
 const listener = audioCtx.listener;
@@ -21,6 +22,9 @@ panner.connect(audioCtx.destination)
 function playAudio(){
 if (audioCtx.state === 'suspended'){
   audioElement.play()
+} else {
+  audioElement.pause()
 }
 
+document.getElementById("start").onclick = function() {playAudio()}
     };

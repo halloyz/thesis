@@ -1,0 +1,10 @@
+TO DO:
+    Simple solution
+        -Fix interaction
+        -Fix panning
+        -Optional audio parameters, reverb etc
+
+    Complex solution
+        -Restrict number of nodes
+        -Fix GET path + checkpoint coordinates
+        -Iteratively update audio position from nearest checkpoint
