@@ -66,8 +66,8 @@ viewer.on('position', async (event) => {
 
 viewer.on('bearing', (event) => {
     // console.log(`'${event.type}' - bearing: ${event.bearing}`);
-    playAudio();
-    bearing = event.bearing/2*Math.PI
+
+    bearing = event.bearing * (Math.PI/180)
 //    myPanner.pan.value = bearing
       listener.forwardX.setValueAtTime(Math.cos(bearing), audioCtx.currentTime);
       listener.forwardY.setValueAtTime(Math.sin(bearing), audioCtx.currentTime);
@@ -75,6 +75,8 @@ viewer.on('bearing', (event) => {
       listener.upX.setValueAtTime(0, audioCtx.currentTime);
       listener.upY.setValueAtTime(0, audioCtx.currentTime);
       listener.upZ.setValueAtTime(0, audioCtx.currentTime);
+
+      filter.frequency.value = event.bearing * (hipass_freq/360)
     
   });
 

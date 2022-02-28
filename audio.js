@@ -15,10 +15,6 @@ const primaryGaincontrol = ctx.createGain()
 primaryGaincontrol.gain.setValueAtTime(0.01, 0);
 primaryGaincontrol.connect(ctx.destination)
 
-const filter = ctx.createBiquadFilter();
-filter.type = "hipass"
-filter.frequency.value = 3000;
-filter.connect(primaryGaincontrol)
 
 const myPanner = ctx.createStereoPanner();
 myPanner.connect(filter);

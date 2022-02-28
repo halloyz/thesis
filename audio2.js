@@ -3,6 +3,10 @@
 const audioCtx = new AudioContext();
 var panner = audioCtx.createPanner();
 const listener = audioCtx.listener;
+const filter = audioCtx.createBiquadFilter();
+filter.type = "hipass"
+const hipass_freq = 3000;
+filter.frequency.value = hipass_freq;
 
 panner.panningModel = 'HRTF';
 panner.distanceModel = 'inverse';
@@ -17,7 +21,13 @@ panner.coneOuterGain = 0;
 const audioElement = document.querySelector('audio');
 const track = audioCtx.createMediaElementSource(audioElement);
 track.connect(panner);
-panner.connect(audioCtx.destination)
+panner.connect(filter);
+filter.connect(audioCtx.destination);
+
+
+
+
+
 
 function playAudio(){
 if (audioCtx.state === 'suspended'){
