@@ -1,9 +1,11 @@
 TO DO:
     Simple solution
-        -Fix interaction
-        -Fix panning
+        -Fix interaction (works)
+        -Fix panning (difficult)
         -Optional audio parameters, reverb etc
-
+            *How to provide front/back orientation to the user? Reverb?
+            *How to provide distance? Filtering
+ 
     Complex solution
         -Restrict number of nodes
         -Fix GET path + checkpoint coordinates

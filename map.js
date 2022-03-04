@@ -4,8 +4,8 @@ let {Viewer, SimpleMarker, geodeticToEnu} = mapillary;
 let viewer = new Viewer({
   accessToken: 'MLY|5055210414499610|cc32fb072365a29201fee81cf2d9e241',
   container: 'mly', // the ID of our container defined in the HTML body
-   imageId: '2921734351448761',
-  //imageId: '766958267354889',
+  // imageId: '2556983327944830',
+  imageId: '2921734351448761',
   component: { marker: true, cover: false }
 });
  viewer.setFilter(["==", "cameraType", 'spherical'], ["==", "creatorId", "gisfrb"]);
@@ -20,6 +20,8 @@ let target = geodeticToEnu(targetLat, targetLng, 0, refLat, refLng, 0);
 const target_x = target[0]
 const target_y = target[1]
 const target_z = 0
+
+
 const markerComponent = viewer.getComponent("marker");
 viewer.activateComponent("marker");
 
@@ -56,9 +58,6 @@ viewer.on('position', async (event) => {
       listener.positionX.setValueAtTime(pos[0], audioCtx.currentTime);
       listener.positionY.setValueAtTime(pos[1], audioCtx.currentTime);
       listener.positionZ.setValueAtTime(0, audioCtx.currentTime);
-      
-      
-      
       
     })
 

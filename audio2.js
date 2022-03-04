@@ -26,13 +26,10 @@ filter.connect(audioCtx.destination);
 
 
 
-
-
-
-function playAudio(){
-if (audioCtx.state === 'suspended'){
+function play(){
+if (audioElement.paused){
   audioElement.play()
-} else {
+} else  {
   audioElement.pause()
 }
 
