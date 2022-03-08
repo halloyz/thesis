@@ -9,21 +9,32 @@
   <script src="ors-js-client.js"></script>
   <audio id="music" src="music.wav"></audio>
   <script src="functions.js"></script>
+  <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
 
     <link
       href="https://unpkg.com/mapillary-js@4.0.0/dist/mapillary.css"
       rel="stylesheet"
     />
+    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
+
 
 
 </head>
 <body>
+  
+  <div id="map-container">
+    <div id="map" style="height: 50vh;"> 
+    </div>
+  </div>
 
-    <div id="mly" style="height: 100vh;">
+    <div id="mly" style="height: 50vh;">
       <button id= "start">Press to start</button>
+      <script src="main_complex.js"></script>
     </div>
     
-    <script src="main_complex.js"></script>
+  
+    
+    
 
 
 </body>

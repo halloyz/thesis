@@ -1,4 +1,5 @@
 L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
+const E = window.exports;
 
 
 // 'map' refers to a <div> element with the ID map
@@ -37,7 +38,9 @@ function getRoute(startLng, startLat, endLng, endLat){
   });
 
 };
-getRoute(12.560666666667, 55.680763888889,12.556296296296068, 55.680208333332985).then(locations =>{
+let startLat = 55.680641878069
+let startLng = 12.555555773811998
+getRoute(startLng, startLat, 12.556296296296068, 55.680208333332985).then(locations =>{
   
   for (var i = 0; i < locations.length; i++) {
     L.marker([locations[i][1], locations[i][0]], {icon: L.mapquest.icons.marker()}).addTo(map)

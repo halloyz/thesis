@@ -8,8 +8,8 @@ const exports = {
         refLng: 12.560666666667,
 
         // These variables define our destination coordinates
-        targetLat: 55.680208333332985, 
-        targetLng: 12.556296296296068,
+        targetLat: 55.678210776097494, 
+        targetLng: 12.556136444185778,
         
     },
     funcs: {
@@ -19,11 +19,13 @@ const exports = {
             let viewer = new Viewer({
                 accessToken: 'MLY|5055210414499610|cc32fb072365a29201fee81cf2d9e241',
                 container: 'mly', // the ID of our container defined in the HTML body
-                imageId: '2921734351448761', //starting point
+                //imageId: '2921734351448761', //starting point
+                imageId: '1552132681648763', //starting point 2
                 //imageId: '2556983327944830',
                 //imageId: '756160608403786'
                 //imageId: '132246192214397',
-                component: { marker: true, cover: false }
+                component: { marker: true, cover: false },
+                transitionMode: 1
             });
         
             viewer.setFilter(["==", "cameraType", 'spherical'], ["==", "creatorId", "gisfrb"]);
@@ -70,7 +72,6 @@ const exports = {
         
         //  Haversine formula to calculate the distance between two points
 
-        
         
         //AUDIO
         
@@ -135,7 +136,7 @@ const exports = {
             else{
                 val = -Math.sin(angle*Math.PI/180);
            }
-            console.log(val)
+            //console.log(val)
             stereoPanner.pan.setValueAtTime(val, audioCtx.currentTime);
             //console.log(val)
             //stereoPanner.pan.setValueAtTime((angle), audioCtx.currentTime);
@@ -212,11 +213,12 @@ const exports = {
           
             return orsDirections.calculate({
               coordinates: [[startLng, startLat], [endLng, endLat]],
-              profile: "driving-car",
+              profile: "cycling-regular",
               //extra_info: ["waytype", "steepness"],
               format: "geojson",
+              preference: "recommended",
               api_version: "v2",
-              geometry_simplify: true
+              geometry_simplify: false
             })
             .then(function(json) {
                 return new Promise((resolve, reject) => {
@@ -231,11 +233,12 @@ const exports = {
 
         getNextCheckPoint(position, checkpoints, current){
             let distances = []
-            for (var i = current; i < checkpoints.length; i++) {
-                let d = E.funcs.distance(checkpoints[i], position.lng, position.lat);
+            for (let i = current; i < checkpoints.length; i++) {
+                let d = E.funcs.distance(checkpoints[i].lng, checkpoints[i].lat, position.lng, position.lat);
                 distances.push(d);
             }
             next = Math.min(distances)
+            console.log(next)
             return next;
         },
 
@@ -247,6 +250,19 @@ const exports = {
         
             return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
         },
+        dist(listener, targ){
+            const pos = geodeticToEnu(
+                targ.lng, targ.lat, 0,
+                exports.consts.refLng, exports.consts.refLat, 0
+            );
+            
+            const pCoords = { x: pos[0], y: pos[1] };
+            const lCoords = { x: listener.positionX.value, y: listener.positionY.value };
+            const lp = { x: pCoords.x - lCoords.x, y: pCoords.y - lCoords.y };
+            const lp_ = Math.sqrt((lp.x*lp.x+lp.y*lp.y));
+            return lp_;
+
+        }
     }
 };
 
