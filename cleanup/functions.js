@@ -9,7 +9,8 @@ const exports = {
 
         // These variables define our destination coordinates
         targetLat: 55.680208333332985, 
-        targetLng: 12.556296296296068
+        targetLng: 12.556296296296068,
+        
     },
     funcs: {
         initialize() {
@@ -18,9 +19,10 @@ const exports = {
             let viewer = new Viewer({
                 accessToken: 'MLY|5055210414499610|cc32fb072365a29201fee81cf2d9e241',
                 container: 'mly', // the ID of our container defined in the HTML body
-                //imageId: '2921734351448761', //starting point
+                imageId: '2921734351448761', //starting point
                 //imageId: '2556983327944830',
-                imageId: '132246192214397',
+                //imageId: '756160608403786'
+                //imageId: '132246192214397',
                 component: { marker: true, cover: false }
             });
         
@@ -67,14 +69,7 @@ const exports = {
         },
         
         //  Haversine formula to calculate the distance between two points
-        distance(lat1, lon1, lat2, lon2) {
-            const p = Math.PI / 180
-            const a = 0.5 - Math.cos((lat2 - lat1) * p) / 2 + 
-                    Math.cos(lat1 * p) * Math.cos(lat2 * p) * 
-                    (1 - Math.cos((lon2 - lon1) * p)) / 2;
-          
-            return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
-        },
+
         
         
         //AUDIO
@@ -86,7 +81,7 @@ const exports = {
         
         //  Sets the listener position. geoDeticToEnu converts latitude and longitude to x-y-z coordinates in a local topocentric plane 
         //  using a reference latitude and longitude.
-        setListenerPos(listener, audioCtx, latitude, longitude) {
+        setListenerPos(listener, audioCtx, longitude, latitude) {
             const pos = geodeticToEnu(longitude, latitude, 0, exports.consts.refLng, exports.consts.refLat, 0);
             listener.positionX.setValueAtTime(pos[0], audioCtx.currentTime);
             listener.positionY.setValueAtTime(pos[1], audioCtx.currentTime);
@@ -181,9 +176,9 @@ const exports = {
             return Math.floor(alpha * 180.0 / Math.PI + 0.5);
         },
 
-        calcAngle2(listener, bearing, pannerLongitude, pannerLatitude) {
+        calcAngle2(listener, bearing, targ) {
             const pos = geodeticToEnu(
-                pannerLongitude, pannerLatitude, 0,
+                targ.lng, targ.lat, 0,
                 exports.consts.refLng, exports.consts.refLat, 0
             );
             
@@ -207,8 +202,51 @@ const exports = {
             alpha = alpha * (180.0/Math.PI);
             //console.log(alpha)
             return alpha;
-        }
+        },
+
+        //ROUTING
+
+        getRoute(startLng, startLat, endLng, endLat){
+
+            let orsDirections = new Openrouteservice.Directions({ api_key: "5b3ce3597851110001cf6248733a96d9c13a4d91994d48edeb3bf8aa"});
+          
+            return orsDirections.calculate({
+              coordinates: [[startLng, startLat], [endLng, endLat]],
+              profile: "driving-car",
+              //extra_info: ["waytype", "steepness"],
+              format: "geojson",
+              api_version: "v2",
+              geometry_simplify: true
+            })
+            .then(function(json) {
+                return new Promise((resolve, reject) => {
+                resolve((json.features[0].geometry.coordinates));
+                })
+              })
+            .catch(function(err) {
+              console.error(err);
+            })
+          
+          },
+
+        getNextCheckPoint(position, checkpoints, current){
+            let distances = []
+            for (var i = current; i < checkpoints.length; i++) {
+                let d = E.funcs.distance(checkpoints[i], position.lng, position.lat);
+                distances.push(d);
+            }
+            next = Math.min(distances)
+            return next;
+        },
+
+        distance(lon1, lat1, lon2, lat2) {
+            const p = Math.PI / 180
+            const a = 0.5 - Math.cos((lat2 - lat1) * p) / 2 + 
+                    Math.cos(lat1 * p) * Math.cos(lat2 * p) * 
+                    (1 - Math.cos((lon2 - lon1) * p)) / 2;
         
+            return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+        },
     }
 };
 
