@@ -46,20 +46,25 @@ const exports = {
             panner.coneOuterAngle = 360;
             panner.coneOuterGain = 0;
 
+            //Filter
             const filter = audioCtx.createBiquadFilter();
-            filter.type = "hipass"
+            filter.type = "lowshelf"
             const hipass_freq = 20000;
             filter.frequency.value = hipass_freq;
+            filter.gain.value = -2.5;
 
+            //Gain
+            const gain = audioCtx.createGain();
+            
+            //Panner
             const stereoPanner = audioCtx.createStereoPanner();
         
-            // TODO: add filter and reverb
-
             track.connect(stereoPanner);
             stereoPanner.connect(filter);
-            filter.connect(audioCtx.destination)
+            filter.connect(gain);
+            gain.connect(audioCtx.destination);
 
-            return { viewer, panner, stereoPanner, filter, audioCtx, audioElement, track, listener };
+            return { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, track, listener };
         },
         setMarker(viewer, latitude, longitude, id) {
             viewer.activateComponent("marker");
@@ -70,7 +75,6 @@ const exports = {
             ]);
         },
         
-        //  Haversine formula to calculate the distance between two points
 
         
         //AUDIO
@@ -93,8 +97,6 @@ const exports = {
             const x = listener.positionX.value + Math.sin(bearing);
             const y = listener.positionY.value + Math.cos(bearing);
 
-            //console.log(x);
-            //console.log(y);
             listener.forwardX.setValueAtTime(x, audioCtx.currentTime);
             listener.forwardY.setValueAtTime(y, audioCtx.currentTime);
             listener.forwardZ.setValueAtTime(0, audioCtx.currentTime);
@@ -122,7 +124,6 @@ const exports = {
             angle = Math.sin(angle*(Math.PI/180))
             //angle = (angle > 0) ? sin(angle+)
             //stereoPanner.pan.setValueAtTime((angle/-135), audioCtx.currentTime);
-            //console.log(angle)
             stereoPanner.pan.setValueAtTime((angle), audioCtx.currentTime);
 
         
@@ -131,29 +132,37 @@ const exports = {
         setStereoPannerPos2(stereoPanner, audioCtx, angle){
             let val;
             if ((150 <= angle && angle < 180) || (-150 >= angle && angle > -180)){
-                val = Math.sin(2*angle*Math.PI/180);
+                val = -Math.sin(2*angle*Math.PI/180);
             }
             else{
-                val = -Math.sin(angle*Math.PI/180);
+                val = Math.sin(angle*Math.PI/180);
            }
             //console.log(val)
             stereoPanner.pan.setValueAtTime(val, audioCtx.currentTime);
-            //console.log(val)
-            //stereoPanner.pan.setValueAtTime((angle), audioCtx.currentTime);
 
         
         },
 
         setFilterCutoff(filter, audioCtx, angle){
-            let s = (500 - 20000) / (180 - 90)
+            let s = (800 - 20000) / (180 - 90)
             let input = Math.abs(angle)
             if (input > 90){
                 let output = 20000 + s * (input-90)
-                console.log(output);
                 filter.frequency.setValueAtTime(output, audioCtx.currentTime)
             }
 
         },
+
+        setGain(gain, audioCtx, angle){
+            let s = -0.8/90
+            let input = Math.abs(angle)
+            if (input >90){
+                let output = 1 + s *(input-90)
+                gain.gain.setValueAtTime(output, audioCtx.currentTime)
+            }
+
+        },
+
         calcAngle(listener, bearing, pannerLongitude, pannerLatitude) {
             const pos = geodeticToEnu(
                 pannerLongitude, pannerLatitude, 0,
@@ -192,8 +201,6 @@ const exports = {
 
             const lp = { x: pCoords.x - lCoords.x, y: pCoords.y - lCoords.y };
             const ld = { x: dirCoords.x - lCoords.x, y: dirCoords.y - lCoords.y };
-            //const lp_ = Math.sqrt((pCoords.x - lCoords.x)*((pCoords.x - lCoords.x)+(pCoords.y-lCoords.y)*(pCoords.y-lCoords.y))
-            //const ld_ = Math.sqrt((dirCoords.x-lCoords.x)*(dirCoords.x-lCoords.x)+(dirCoords.y-lCoords.y)*(dirCoords.y-lCoords.y))
             const lp_ = Math.sqrt((lp.x*lp.x+lp.y*lp.y));
             const ld_ = Math.sqrt((ld.x*ld.x+ld.y*ld.y));
             const det = lp.x * ld.y - lp.y * ld.x;
@@ -267,6 +274,5 @@ const exports = {
 };
 
 
-//MAPILLARY
 
 window.exports = exports;

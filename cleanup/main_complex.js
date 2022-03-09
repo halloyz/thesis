@@ -1,10 +1,11 @@
 let current = 0;
 let threshold = 20;
 let posMarker;
+let checkbox = document.querySelector("input");
 L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
 
-// 'map' refers to a <div> element with the ID map
- var map =L.mapquest.map('map', {
+//We will use a map to see what is going on from above.
+ const map =L.mapquest.map('map', {
   center: [55.680763888889, 12.560666666667],
   // L.mapquest.tileLayer('map') is the MapQuest map tile layer
   layers: L.mapquest.tileLayer('map'),
@@ -13,25 +14,21 @@ L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
 
 // Initialize the viewer (calls the constructor in functions.js)
 const E = window.exports;
-let { viewer, panner, filter, stereoPanner, audioCtx, audioElement, track, listener } = E.funcs.initialize();
+let { viewer, panner, filter, gain, stereoPanner, audioCtx, audioElement, track, listener } = E.funcs.initialize();
 E.funcs.setMarker(viewer, E.consts.targetLat, E.consts.targetLng, "target");
 
 // Get route
 const checkpoints = []
 const markers = []
-const startPos = {lng: null, lat: null}
 const initPromise = new Promise(function(resolve,reject){
     viewer.getPosition()
         .then (async function (pos){
-            console.log(pos);
             const p = await pos;
-            startPos.lng = p.lng;
-            startPos.lat = p.lat;
             map.setView([p.lat, p.lng]);
             posMarker = L.marker([p.lat,p.lng], {icon: L.mapquest.icons.circle({primaryColor: '#FF0000',
             })}).addTo(map)
-            E.funcs.setListenerPos(listener, audioCtx, startPos.lng, startPos.lat)
-            E.funcs.getRoute(startPos.lng, startPos.lat, E.consts.targetLng, E.consts.targetLat)
+            E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat)
+            E.funcs.getRoute(p.lng, p.lat, E.consts.targetLng, E.consts.targetLat)
             .then(locations => {for (var i = 0; i < locations.length; i++){
                 checkpoints.push({lng: locations[i][0], lat: locations[i][1]});
                 let m = L.marker([locations[i][1], locations[i][0]], {icon: L.mapquest.icons.marker()})
@@ -46,9 +43,7 @@ const initPromise = new Promise(function(resolve,reject){
                 .catch(function(err) {
                     console.error(err);
                 })
-                    //.then(next => E.funcs.calcAngle2(listener,b,next))
-                    //.then(angle => console.log(angle));
-                    //;
+
                 })
             })
         });
@@ -62,7 +57,7 @@ const initPromise = new Promise(function(resolve,reject){
 }
 
 initPromise.then(function(){
-// Update listener position if user updates their position
+// Update listener position+relative angle if user updates their position
 viewer.on('position', event => {
     resumeIfSuspended();
     viewer.getPosition()
@@ -70,28 +65,37 @@ viewer.on('position', event => {
             p = position;
             posMarker.setLatLng([p.lat, p.lng])
             E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat);
-            //cp = E.funcs.getNextCheckPoint(p, checkpoints, current);
             cp = checkpoints[current+1];
+            
+            viewer.getBearing()//The angle relative to the speaker changes with listener position also, so we need to update that as well
+                .then(bearing => {
+                    bearing = (bearing * Math.PI / 180)//convert to radians
+                    const angle = E.funcs.calcAngle2(listener, bearing, cp)
+                    E.funcs.setStereoPannerPos2(stereoPanner,audioCtx, angle)
+                    E.funcs.setFilterCutoff(filter, audioCtx, angle);
+                    E.funcs.setGain(gain, audioCtx, angle)
+                    console.log(`The angle is: ${angle}`);
+                    })
+            
             E.funcs.setMarker(viewer, cp.lat, cp.lng, "cp");
-            //console.log(p)
+            if (!checkbox.checked){
+                viewer.deactivateComponent('marker');
+            }
             dist = E.funcs.dist(listener, cp)
-            console.log(dist);
             if (dist < threshold){
                 markers[current].setIcon(L.mapquest.icons.marker({primaryColor: '#FF0000',
             }))
                 current+=1;
                 
                 if (current === checkpoints.length-1){
-                    console.log("You made it!")
+                    window.alert("You made it!");
                 }
-                //cp = E.funcs.getNextCheckPoint(pos, checkpoints, current)
             } 
-            //console.log(cp);
 
         });
 });
 
-// Update listener POV if user updates their POV 
+// Update angle relative to speaker if user updates their POV (rotating)
 viewer.on('bearing', event => {
     const bearing = event.bearing * (Math.PI / 180) // Get bearing and convert to radians
     resumeIfSuspended();
@@ -99,10 +103,11 @@ viewer.on('bearing', event => {
     const angle = E.funcs.calcAngle2(listener, bearing, cp);
     E.funcs.setStereoPannerPos2(stereoPanner, audioCtx, angle);
     console.log(`The angle is: ${angle}`);
-
-    //E.funcs.setFilterCutoff(filter, audioCtx,angle);
+    E.funcs.setFilterCutoff(filter, audioCtx, angle);
+    E.funcs.setGain(gain, audioCtx, angle)
 });
 
+//Button to play/pause audio
 document.getElementById("start").onclick = event => {
     if (audioElement.paused || !audioElement.currentTime) {
         audioElement.play()
@@ -114,5 +119,14 @@ document.getElementById("start").onclick = event => {
             .catch(e => console.error("Pause failed"));
     }
 };
+
+//Checkbox for showing markers (where the audio is coming from)
+checkbox.addEventListener('change', function() {
+  if (this.checked) {
+    viewer.activateComponent('marker');
+  } else {
+    viewer.deactivateComponent('marker');
+  }
+});
 
 });
