@@ -1,6 +1,7 @@
-let current = 0;
-let threshold = 20;
-let posMarker;
+let current = 0; //Keeps track of current checkpoint index, (initial: 0)
+const threshold = 20; //Distance in m for when audio should move to next checkpoint (default: 20)
+let posMarker; //Will show user position on map
+
 let checkbox = document.querySelector("input");
 L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
 
@@ -14,7 +15,7 @@ L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
 
 // Initialize the viewer (calls the constructor in functions.js)
 const E = window.exports;
-let { viewer, panner, filter, gain, stereoPanner, audioCtx, audioElement, track, listener } = E.funcs.initialize();
+let { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, successElement, listener } = E.funcs.initialize();
 E.funcs.setMarker(viewer, E.consts.targetLat, E.consts.targetLng, "target");
 
 // Get route
@@ -29,10 +30,12 @@ const initPromise = new Promise(function(resolve,reject){
             })}).addTo(map)
             E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat)
             E.funcs.getRoute(p.lng, p.lat, E.consts.targetLng, E.consts.targetLat)
+            
             .then(locations => {for (var i = 0; i < locations.length; i++){
                 checkpoints.push({lng: locations[i][0], lat: locations[i][1]});
-                let m = L.marker([locations[i][1], locations[i][0]], {icon: L.mapquest.icons.marker()})
-                m.addTo(map)
+                let m = L.marker([locations[i][1], locations[i][0]], {icon: L.mapquest.icons.marker({symbol: String(i)})})
+                    .bindTooltip(String(i))
+                    .addTo(map)
                 markers.push(m)
                 }
                 E.funcs.setMarker(viewer, checkpoints[1].lat, checkpoints[1].lng, "cp")
@@ -88,7 +91,9 @@ viewer.on('position', event => {
                 current+=1;
                 
                 if (current === checkpoints.length-1){
-                    window.alert("You made it!");
+                    audioElement.pause()
+                    successElement.play()
+                    alert("You made it!");
                 }
             } 
 
@@ -114,9 +119,8 @@ document.getElementById("start").onclick = event => {
             .then(() => console.log("Playback started!"))
             .catch(e => console.error("Playback failed"));
     } else {
-        audioElement.pause()
-            .then(() => console.log("Playback paused!"))
-            .catch(e => console.error("Pause failed"));
+        audioElement.pause();
+
     }
 };
 

@@ -10,6 +10,9 @@ const exports = {
         // These variables define our destination coordinates
         targetLat: 55.678210776097494, 
         targetLng: 12.556136444185778,
+
+        //targetLng: 12.554218, 
+        //targetLat: 55.681619,
         
     },
     funcs: {
@@ -33,7 +36,10 @@ const exports = {
             // Initialize Audio
             const audioCtx = new AudioContext();
             const audioElement = document.getElementById('music');
+            const successElement = document.getElementById('success');
+
             const track = audioCtx.createMediaElementSource(audioElement);
+            const successTrack = audioCtx.createMediaElementSource(successElement);
             const listener = audioCtx.listener;
 
             const panner = audioCtx.createPanner();
@@ -64,7 +70,9 @@ const exports = {
             filter.connect(gain);
             gain.connect(audioCtx.destination);
 
-            return { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, track, listener };
+            successTrack.connect(audioCtx.destination);
+
+            return { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, successElement, listener };
         },
         setMarker(viewer, latitude, longitude, id) {
             viewer.activateComponent("marker");
