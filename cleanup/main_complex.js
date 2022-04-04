@@ -74,7 +74,8 @@ viewer.on('position', event => {
                 .then(bearing => {
                     bearing = (bearing * Math.PI / 180)//convert to radians
                     const angle = E.funcs.calcAngle2(listener, bearing, cp)
-                    E.funcs.setStereoPannerPos2(stereoPanner,audioCtx, angle)
+                    //E.funcs.setStereoPannerPos2(stereoPanner,audioCtx, angle)
+                    E.funcs.setPannerPos(panner, audioCtx, p)
                     E.funcs.setFilterCutoff(filter, audioCtx, angle);
                     E.funcs.setGain(gain, audioCtx, angle)
                     console.log(`The angle is: ${angle}`);
@@ -86,7 +87,7 @@ viewer.on('position', event => {
             }
             dist = E.funcs.dist(listener, cp)
             if (dist < threshold){
-                markers[current].setIcon(L.mapquest.icons.marker({primaryColor: '#FF0000',
+                markers[current+1].setIcon(L.mapquest.icons.marker({primaryColor: '#FF0000',
             }))
                 current+=1;
                 

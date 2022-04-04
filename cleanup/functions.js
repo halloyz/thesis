@@ -120,10 +120,9 @@ const exports = {
             ]);
             //filter.frequency.value = event.bearing * (hipass_freq/360)          
         },
-        setPannerPos(panner, audioCtx, longitude, latitude) {
-            const pos = geodeticToEnu(longitude, latitude, 0, exports.consts.refLng, exports.consts.refLat, 0);
-            panner.positionX.setValueAtTime(pos[0], audioCtx.currentTime);
-            panner.positionY.setValueAtTime(pos[1], audioCtx.currentTime);
+        setPannerPos(panner, audioCtx, dirCoords) {
+            panner.positionX.setValueAtTime(dirCoords.x, audioCtx.currentTime);
+            panner.positionY.setValueAtTime(dirCoords.y, audioCtx.currentTime);
             panner.positionZ.setValueAtTime(0, audioCtx.currentTime);
         },
 
@@ -171,9 +170,9 @@ const exports = {
 
         },
 
-        calcAngle(listener, bearing, pannerLongitude, pannerLatitude) {
+        calcdirCoords(listener, bearing, targ) {
             const pos = geodeticToEnu(
-                pannerLongitude, pannerLatitude, 0,
+                targ.lng, targ.lat, 0,
                 exports.consts.refLng, exports.consts.refLat, 0
             );
             
@@ -191,7 +190,7 @@ const exports = {
             const cross = ab.x * cb.y - ab.y * cb.x; // cross product
             const alpha = Math.atan2(cross, dot);
             
-            return Math.floor(alpha * 180.0 / Math.PI + 0.5);
+            return dirCoords
         },
 
         calcAngle2(listener, bearing, targ) {
