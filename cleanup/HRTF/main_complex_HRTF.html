@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="shortcut icon" href="#">
+  <script src="https://cdn.jsdelivr.net/npm/resonance-audio/build/resonance-audio.min.js"></script>
+  <script src="https://unpkg.com/mapillary-js@4.0.0/dist/mapillary.js"></script>
+  <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+  <script src="../ors-js-client.js"></script>
+  <audio id="music" src="bemybaby.wav"></audio>
+  <audio id="success" src="success.mp3" preload="auto"></audio>
+  <script src="functions_HRTF.js"></script>
+  <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+
+    <link
+      href="https://unpkg.com/mapillary-js@4.0.0/dist/mapillary.css"
+      rel="stylesheet"
+    />
+    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
+
+
+
+</head>
+<body>
+  
+  <div id="map-container">
+    <div id="map" style="height: 50vh;"> 
+    </div>
+  </div>
+  <div id="toolbar">
+    <button id= "start">play/pause music</button>
+    <input type="checkbox" id="markers" name="markers" checked>
+    <label for="markers" >show markers</label>
+  </div>
+
+    <div id="mly" style="height: 50vh;">
+
+      
+      <script src="main_complex_HRTF.js"></script>
+    </div>
+    
+  
+    
+    
+
+
+</body>
+</html>
