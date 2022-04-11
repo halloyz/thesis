@@ -23,8 +23,8 @@ const exports = {
                 accessToken: 'MLY|5055210414499610|cc32fb072365a29201fee81cf2d9e241',
                 container: 'mly', // the ID of our container defined in the HTML body
                 //imageId: '2921734351448761', //starting point
-                imageId: '1552132681648763', //starting point 2
-                //imageId: '2556983327944830',
+                //imageId: '1552132681648763', //starting point destination 1
+                imageId: '844024269842239',//starting point destination 1, short
                 //imageId: '756160608403786'
                 //imageId: '132246192214397',
                 component: { marker: true, cover: false },

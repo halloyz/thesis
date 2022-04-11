@@ -1,3 +1,8 @@
+let startTime = 0
+let endTime = 0
+let result = window.localStorage.getItem(("result"));
+result = JSON.parse(result)
+
 let current = 0; //Keeps track of current checkpoint index, (initial: 0)
 const threshold = 20; //Distance in m for when audio should move to next checkpoint (default: 20)
 let posMarker; //Will show user position on map
@@ -60,78 +65,83 @@ const initPromise = new Promise(function(resolve,reject){
 }
 
 initPromise.then(function(){
+    startTime = performance.now();
 // Update listener position+relative angle if user updates their position
-viewer.on('position', event => {
-    resumeIfSuspended();
-    viewer.getPosition()
-        .then(function(position){
-            p = position;
-            posMarker.setLatLng([p.lat, p.lng])
-            E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat);
-            cp = checkpoints[current+1];
-            
-            viewer.getBearing()//The angle relative to the speaker changes with listener position also, so we need to update that as well
-                .then(bearing => {
-                    bearing = (bearing * Math.PI / 180)//convert to radians
-                    const angle = E.funcs.calcAngle2(listener, bearing, cp)
-                    //E.funcs.setStereoPannerPos2(stereoPanner,audioCtx, angle)
-                    E.funcs.setPannerPos(panner, audioCtx, p)
-                    E.funcs.setFilterCutoff(filter, audioCtx, angle);
-                    E.funcs.setGain(gain, audioCtx, angle)
-                    console.log(`The angle is: ${angle}`);
-                    })
-            
-            E.funcs.setMarker(viewer, cp.lat, cp.lng, "cp");
-            if (!checkbox.checked){
-                viewer.deactivateComponent('marker');
-            }
-            dist = E.funcs.dist(listener, cp)
-            if (dist < threshold){
-                markers[current+1].setIcon(L.mapquest.icons.marker({primaryColor: '#FF0000',
-            }))
-                current+=1;
+    viewer.on('position', event => {
+        resumeIfSuspended();
+        viewer.getPosition()
+            .then(function(position){
+                p = position;
+                posMarker.setLatLng([p.lat, p.lng])
+                E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat);
+                cp = checkpoints[current+1];
                 
-                if (current === checkpoints.length-1){
-                    audioElement.pause()
-                    successElement.play()
-                    alert("You made it!");
+                viewer.getBearing()//The angle relative to the speaker changes with listener position also, so we need to update that as well
+                    .then(bearing => {
+                        bearing = (bearing * Math.PI / 180)//convert to radians
+                        const angle = E.funcs.calcAngle2(listener, bearing, cp)
+                        //E.funcs.setStereoPannerPos2(stereoPanner,audioCtx, angle)
+                        E.funcs.setPannerPos(panner, audioCtx, p)
+                        E.funcs.setFilterCutoff(filter, audioCtx, angle);
+                        E.funcs.setGain(gain, audioCtx, angle)
+                        console.log(`The angle is: ${angle}`);
+                        })
+                
+                E.funcs.setMarker(viewer, cp.lat, cp.lng, "cp");
+                if (!checkbox.checked){
+                    viewer.deactivateComponent('marker');
                 }
-            } 
+                dist = E.funcs.dist(listener, cp)
+                if (dist < threshold){
+                    markers[current+1].setIcon(L.mapquest.icons.marker({primaryColor: '#FF0000',
+                }))
+                    current+=1;
+                    
+                    if (current === checkpoints.length-1){
+                        let time = Math.floor((performance.now() - startTime)/1000)
+                        result.task1 = time
+                        window.localStorage.setItem("result", JSON.stringify(result));
+                        audioElement.pause()
+                        successElement.play()
+                        alert("You made it!");
+                        window.location.href = "test/finish.html"
+                    }
+                } 
 
-        });
-});
+            });
+    });
 
-// Update angle relative to speaker if user updates their POV (rotating)
-viewer.on('bearing', event => {
-    const bearing = event.bearing * (Math.PI / 180) // Get bearing and convert to radians
-    resumeIfSuspended();
-    cp = checkpoints[current+1];
-    const angle = E.funcs.calcAngle2(listener, bearing, cp);
-    E.funcs.setStereoPannerPos2(stereoPanner, audioCtx, angle);
-    console.log(`The angle is: ${angle}`);
-    E.funcs.setFilterCutoff(filter, audioCtx, angle);
-    E.funcs.setGain(gain, audioCtx, angle)
-});
+    // Update angle relative to speaker if user updates their POV (rotating)
+    viewer.on('bearing', event => {
+        const bearing = event.bearing * (Math.PI / 180) // Get bearing and convert to radians
+        resumeIfSuspended();
+        cp = checkpoints[current+1];
+        const angle = E.funcs.calcAngle2(listener, bearing, cp);
+        E.funcs.setStereoPannerPos2(stereoPanner, audioCtx, angle);
+        console.log(`The angle is: ${angle}`);
+        E.funcs.setFilterCutoff(filter, audioCtx, angle);
+        E.funcs.setGain(gain, audioCtx, angle)
+    });
 
-//Button to play/pause audio
-document.getElementById("start").onclick = event => {
-    if (audioElement.paused || !audioElement.currentTime) {
-        audioElement.play()
-            .then(() => console.log("Playback started!"))
-            .catch(e => console.error("Playback failed"));
+    //Button to play/pause audio
+    document.getElementById("start").onclick = event => {
+        if (audioElement.paused || !audioElement.currentTime) {
+            audioElement.play()
+                .then(() => console.log("Playback started!"))
+                .catch(e => console.error("Playback failed"));
+        } else {
+            audioElement.pause();
+
+        }
+    };
+
+    //Checkbox for showing markers (where the audio is coming from)
+    checkbox.addEventListener('change', function() {
+    if (this.checked) {
+        viewer.activateComponent('marker');
     } else {
-        audioElement.pause();
-
+        viewer.deactivateComponent('marker');
     }
-};
-
-//Checkbox for showing markers (where the audio is coming from)
-checkbox.addEventListener('change', function() {
-  if (this.checked) {
-    viewer.activateComponent('marker');
-  } else {
-    viewer.deactivateComponent('marker');
-  }
-});
+    });
 
 });
