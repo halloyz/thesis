@@ -7,7 +7,7 @@ result = JSON.parse(result)
 
 document.getElementById("start").onclick = function() {
   startTime = performance.now();
-  window.location.href = "../main_complex.html";
+  window.location.href = "https://halloyz.github.io/thesis/cleanup/main_complex.html";
 
 }
 
