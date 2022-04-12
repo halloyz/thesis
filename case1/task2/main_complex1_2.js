@@ -6,6 +6,7 @@ result = JSON.parse(result)
 let current = 0; //Keeps track of current checkpoint index, (initial: 0)
 const threshold = 20; //Distance in m for when audio should move to next checkpoint (default: 20)
 let posMarker; //Will show user position on map
+let cp;
 
 let checkbox = document.querySelector("input");
 L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
@@ -21,7 +22,7 @@ L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
 // Initialize the viewer (calls the constructor in functions.js)
 const E = window.exports;
 let { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, successElement, listener } = E.funcs.initialize();
-E.funcs.setMarker(viewer, E.consts.targetLat, E.consts.targetLng, "target");
+//E.funcs.setMarker(viewer, E.consts.targetLat, E.consts.targetLng, "target");
 
 // Get route
 const checkpoints = []
@@ -44,6 +45,7 @@ const initPromise = new Promise(function(resolve,reject){
                 markers.push(m)
                 }
                 E.funcs.setMarker(viewer, checkpoints[1].lat, checkpoints[1].lng, "cp")
+                cp = checkpoints[current+1];
                 viewer.getBearing()
                 .then(bearing => E.funcs.calcAngle2(listener,bearing,checkpoints[1]))
                 .then(angle => E.funcs.setStereoPannerPos2(stereoPanner,audioCtx,angle))
@@ -71,42 +73,46 @@ initPromise.then(function(){
         resumeIfSuspended();
         viewer.getPosition()
             .then(function(position){
-                p = position;
+                let p = position;
                 posMarker.setLatLng([p.lat, p.lng])
                 E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat);
-                cp = checkpoints[current+1];
-                
-                viewer.getBearing()//The angle relative to the speaker changes with listener position also, so we need to update that as well
-                    .then(bearing => {
-                        bearing = (bearing * Math.PI / 180)//convert to radians
-                        const angle = E.funcs.calcAngle2(listener, bearing, cp)
-                        //E.funcs.setStereoPannerPos2(stereoPanner,audioCtx, angle)
-                        E.funcs.setStereoPannerPos2(stereoPanner, audioCtx, angle)
-                        E.funcs.setFilterCutoff(filter, audioCtx, angle);
-                        E.funcs.setGain(gain, audioCtx, angle)
-                        console.log(`The angle is: ${angle}`);
-                        })
-                
-                E.funcs.setMarker(viewer, cp.lat, cp.lng, "cp");
-                if (!checkbox.checked){
-                    viewer.deactivateComponent('marker');
-                }
-                dist = E.funcs.dist(listener, cp)
+
+                let dist = E.funcs.dist(listener, cp)
+                console.log(`Distance:  ${dist}`)
                 if (dist < threshold){
-                    markers[current+1].setIcon(L.mapquest.icons.marker({primaryColor: '#FF0000',
-                }))
-                    current+=1;
-                    
-                    if (current === checkpoints.length-1){
+                    console.log('Checkpoint updated!')
+                    markers[current+1].setIcon(L.mapquest.icons.marker({primaryColor: '#FF0000',}))
+
+                    current +=1;
+
+                    if (current === checkpoints.length-1){ //If current checkpoint is the final checkpoint, we made it 
                         let time = Math.floor((performance.now() - startTime)/1000)
-                        result.task1 = time
+                        result.task2 = time
                         window.localStorage.setItem("result", JSON.stringify(result));
                         audioElement.pause()
                         successElement.play()
                         alert("You made it!");
-                        window.location.href = "https://halloyz.github.io/thesis/cleanup/case1/task2/instructions.html"
+                        window.location.href = "https://halloyz.github.io/thesis/cleanup/case1/finish.html"
                     }
-                } 
+                }
+                cp = checkpoints[current+1]
+                E.funcs.setMarker(viewer, cp.lat, cp.lng, "cp");
+
+                viewer.getBearing()//The angle relative to the speaker changes with listener position also, so we need to update that as well
+                    .then(bearing => {
+                        bearing = (bearing * Math.PI / 180)//convert to radians
+                        const angle = E.funcs.calcAngle2(listener, bearing, cp)
+                        E.funcs.setStereoPannerPos2(stereoPanner, audioCtx, angle)
+                        E.funcs.setFilterCutoff(filter, audioCtx, angle);
+                        E.funcs.setGain(gain, audioCtx, angle)
+                        //console.log(`The angle is: ${angle}`);
+                        })
+                
+
+                if (!checkbox.checked){
+                    viewer.deactivateComponent('marker');
+                }
+
 
             });
     });
@@ -115,7 +121,7 @@ initPromise.then(function(){
     viewer.on('bearing', event => {
         const bearing = event.bearing * (Math.PI / 180) // Get bearing and convert to radians
         resumeIfSuspended();
-        cp = checkpoints[current+1];
+        let cp = checkpoints[current+1];
         const angle = E.funcs.calcAngle2(listener, bearing, cp);
         E.funcs.setStereoPannerPos2(stereoPanner, audioCtx, angle);
         console.log(`The angle is: ${angle}`);

@@ -8,11 +8,11 @@ const exports = {
         refLng: 12.560666666667,
 
         // These variables define our destination coordinates
-        targetLat: 55.678210776097494, 
-        targetLng: 12.556136444185778,
+        //targetLat: 55.678210776097494, //A->B
+        //targetLng: 12.556136444185778, //A->B
 
-        //targetLng: 12.554218, 
-        //targetLat: 55.681619,
+        targetLat: 55.68171833505691,  //C->D
+        targetLng: 12.551868533141779, //C->D
         
     },
     funcs: {
@@ -22,11 +22,11 @@ const exports = {
             let viewer = new Viewer({
                 accessToken: 'MLY|5055210414499610|cc32fb072365a29201fee81cf2d9e241',
                 container: 'mly', // the ID of our container defined in the HTML body
-                //imageId: '2921734351448761', //starting point
-                //imageId: '1552132681648763', //starting point destination 1
-                imageId: '844024269842239',//starting point destination 1, short
-                //imageId: '756160608403786'
-                //imageId: '132246192214397',
+
+                //imageId: '1552132681648763', //starting point A->B
+                //imageId: '844024269842239',//starting point A->B, short
+
+                imageId: '973113553478933', //starting point C->D
                 component: { marker: true, cover: false },
                 transitionMode: 1
             });
@@ -227,12 +227,12 @@ const exports = {
           
             return orsDirections.calculate({
               coordinates: [[startLng, startLat], [endLng, endLat]],
-              profile: "cycling-regular",
+              profile: "foot-walking",
               //extra_info: ["waytype", "steepness"],
               format: "geojson",
               preference: "recommended",
               api_version: "v2",
-              geometry_simplify: false
+              geometry_simplify: true
             })
             .then(function(json) {
                 return new Promise((resolve, reject) => {
