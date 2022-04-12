@@ -1,4 +1,4 @@
-let result = {email: null, task1: null}
+let result = {case: 1, email: null, task1: null}
 
 document.getElementById("proceed").onclick = function(){
     result.email = document.getElementById("email").value

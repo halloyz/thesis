@@ -104,7 +104,7 @@ initPromise.then(function(){
                         audioElement.pause()
                         successElement.play()
                         alert("You made it!");
-                        window.location.href = "https://halloyz.github.io/thesis/cleanup/test/finish.html"
+                        window.location.href = "https://halloyz.github.io/thesis/cleanup/case1/task2/instructions.html"
                     }
                 } 
 
