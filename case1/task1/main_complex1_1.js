@@ -2,7 +2,7 @@ let startTime = 0
 let endTime = 0
 let result = window.localStorage.getItem(("result"));
 result = JSON.parse(result)
-window.location.href = "task2/instructions.html"
+window.location.href = "/task2/instructions.html"
 let current = 0; //Keeps track of current checkpoint index, (initial: 0)
 const threshold = 20; //Distance in m for when audio should move to next checkpoint (default: 20)
 let posMarker; //Will show user position on map
@@ -104,7 +104,7 @@ initPromise.then(function(){
                         audioElement.pause()
                         successElement.play()
                         alert("You made it!");
-                        window.location.href = "task2/instructions.html"
+                        window.location.href = "/task2/instructions.html"
                     }
                 } 
 
