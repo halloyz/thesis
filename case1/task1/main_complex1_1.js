@@ -64,7 +64,6 @@ const initPromise = new Promise(function(resolve,reject){
 }
 
 initPromise.then(function(){
-    window.location.href = "../case1/task2/instructions.html"
 
     startTime = performance.now();
 // Update listener position+relative angle if user updates their position
@@ -105,7 +104,7 @@ initPromise.then(function(){
                         audioElement.pause()
                         successElement.play()
                         alert("You made it!");
-                        window.location.href = "../task2/instructions.html"
+                        window.location.href = "https://halloyz.github.io/thesis/case1/task2/instructions.html"
                     }
                 } 
 
