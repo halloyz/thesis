@@ -8,6 +8,6 @@ document.getElementById("proceed").onclick = function(){
     }
     else{
     window.localStorage.setItem("result", JSON.stringify(result));
-    window.location.href = "task1/task1.html";
+    window.location.href = "task1/instructions.html";
     }
 }
