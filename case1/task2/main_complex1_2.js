@@ -92,7 +92,7 @@ initPromise.then(function(){
                         audioElement.pause()
                         successElement.play()
                         alert("You made it!");
-                        window.location.href = "https://halloyz.github.io/thesis/cleanup/case1/finish.html"
+                        window.location.href = "../finish.html"
                     }
                 }
                 cp = checkpoints[current+1]
