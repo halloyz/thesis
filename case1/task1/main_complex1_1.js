@@ -64,7 +64,7 @@ const initPromise = new Promise(function(resolve,reject){
 }
 
 initPromise.then(function(){
-    window.location.href = "case1/task2/instructions.html"
+    window.location.href = "../case1/task2/instructions.html"
 
     startTime = performance.now();
 // Update listener position+relative angle if user updates their position
