@@ -20,7 +20,7 @@ L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
 
 // Initialize the viewer (calls the constructor in functions.js)
 const E = window.exports;
-let { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, successElement, listener } = E.funcs.initialize();
+let { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, vocalElement, successElement, listener } = E.funcs.initialize();
 //E.funcs.setMarker(viewer, E.consts.targetLat, E.consts.targetLng, "target");
 
 // Get route
@@ -132,10 +132,12 @@ initPromise.then(function(){
     document.getElementById("start").onclick = event => {
         if (audioElement.paused || !audioElement.currentTime) {
             audioElement.play()
+            vocalElement.play()
                 .then(() => console.log("Playback started!"))
                 .catch(e => console.error("Playback failed"));
         } else {
             audioElement.pause();
+            vocalElement.pause();
 
         }
     };

@@ -36,9 +36,11 @@ const exports = {
             // Initialize Audio
             const audioCtx = new AudioContext();
             const audioElement = document.getElementById('music');
+            const vocalElement = document.getElementById('vocals');
             const successElement = document.getElementById('success');
 
             const track = audioCtx.createMediaElementSource(audioElement);
+            const vocalTrack = audioCtx.createMediaElementSource(vocalElement);
             const successTrack = audioCtx.createMediaElementSource(successElement);
             const listener = audioCtx.listener;
 
@@ -54,25 +56,27 @@ const exports = {
 
             //Filter
             const filter = audioCtx.createBiquadFilter();
-            filter.type = "lowshelf"
+            filter.type = "highshelf"
             const hipass_freq = 20000;
             filter.frequency.value = hipass_freq;
-            filter.gain.value = -2.5;
+            filter.gain.value = -5;
 
             //Gain
             const gain = audioCtx.createGain();
-            
+            const gain_inst = audioCtx.createGain();
+            gain_inst.gain.value = 0.9;
             //Panner
             const stereoPanner = audioCtx.createStereoPanner();
         
-            track.connect(stereoPanner);
+            vocalTrack.connect(stereoPanner);
             stereoPanner.connect(filter);
             filter.connect(gain);
             gain.connect(audioCtx.destination);
 
             successTrack.connect(audioCtx.destination);
-
-            return { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, successElement, listener };
+            track.connect(gain_inst);
+            gain_inst.connect(audioCtx.destination);
+            return { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, vocalElement, successElement, listener };
         },
         setMarker(viewer, latitude, longitude, id) {
             viewer.activateComponent("marker");
@@ -156,12 +160,14 @@ const exports = {
             if (input > 90){
                 let output = 20000 + s * (input-90)
                 filter.frequency.setValueAtTime(output, audioCtx.currentTime)
+                console.log(`Filter frequency: ${output}`);
             }
 
         },
 
         setGain(gain, audioCtx, angle){
             let s = -0.8/90
+            //let s = (0.2-0.5)/90
             let input = Math.abs(angle)
             if (input >90){
                 let output = 1 + s *(input-90)
@@ -232,7 +238,7 @@ const exports = {
               format: "geojson",
               preference: "recommended",
               api_version: "v2",
-              geometry_simplify: true
+              geometry_simplify: false
             })
             .then(function(json) {
                 return new Promise((resolve, reject) => {
