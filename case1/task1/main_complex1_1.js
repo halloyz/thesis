@@ -104,7 +104,7 @@ initPromise.then(function(){
                         audioElement.pause()
                         successElement.play()
                         alert("You made it!");
-                        window.location.href = "../case1/task2/instructions.html"
+                        window.location.href = "/task2/instructions.html"
                     }
                 } 
 
