@@ -102,7 +102,7 @@ initPromise.then(function(){
 
                 viewer.getBearing()//The angle relative to the speaker changes with listener position also, so we need to update that as well
                     .then(bearing => {
-                        bearing = (bearing * Math.PI / 180)//convert to radians
+                        const bearing = (bearing * Math.PI / 180)//convert to radians
                         const angle = E.funcs.calcAngle2(listener, bearing, cp)
                         E.funcs.setStereoPannerPos2(stereoPanner, audioCtx, angle)
                         E.funcs.setFilterCutoff(filter, audioCtx, angle);

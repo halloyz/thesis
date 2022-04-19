@@ -27,23 +27,24 @@ const exports = {
             const audioCtx = new AudioContext();
             const audioElement = document.getElementById('music');
             const vocalElement = document.getElementById('vocals');
+            const wetElement = document.getElementById('vocals2');
             const successElement = document.getElementById('success');
 
             const track = audioCtx.createMediaElementSource(audioElement);
             const vocalTrack = audioCtx.createMediaElementSource(vocalElement);
             const successTrack = audioCtx.createMediaElementSource(successElement);
             const listener = audioCtx.listener;
+            const wetTrack = audioCtx.createMediaElementSource(wetElement);
 
-            const panner = audioCtx.createPanner();
-            panner.panningModel = 'HRTF';
-            panner.distanceModel = 'linear';
-            panner.refDistance = 1;
-            panner.maxDistance = 10000;
-            panner.rolloffFactor = 10;
-            panner.coneInnerAngle = 0;
-            panner.coneOuterAngle = 360;
-            panner.coneOuterGain = 0;
+            //Reverb
+            const reverbjs={extend:function(audioCtx){function decodeBase64ToArrayBuffer(input){function encodedValue(input,index){var encodedCharacter,x=input.charCodeAt(index);return index<input.length&&(x>=65&&90>=x?encodedCharacter=x-65:x>=97&&122>=x?encodedCharacter=x-71:x>=48&&57>=x?encodedCharacter=x+4:43===x?encodedCharacter=62:47===x?encodedCharacter=63:61!==x&&console.log("base64 encountered unexpected character code: "+x)),encodedCharacter}if(0===input.length||input.length%4>0)return void console.log("base64 encountered unexpected length: "+input.length);for(var i,padding=input.match(/[=]*$/)[0].length,decodedLength=3*input.length/4-padding,buffer=new ArrayBuffer(decodedLength),bufferView=new Uint8Array(buffer),encoded=[],d=0,e=0;decodedLength>d;){for(i=0;4>i;i+=1)encoded[i]=encodedValue(input,e),e+=1;bufferView[d]=4*encoded[0]+Math.floor(encoded[1]/16),d+=1,decodedLength>d&&(bufferView[d]=encoded[1]%16*16+Math.floor(encoded[2]/4),d+=1),decodedLength>d&&(bufferView[d]=encoded[2]%4*64+encoded[3],d+=1)}return buffer}function decodeAndSetupBuffer(node,arrayBuffer,callback){audioCtx.decodeAudioData(arrayBuffer,function(audioBuffer){console.log("Finished decoding audio data."),node.buffer=audioBuffer,"function"==typeof callback&&null!==audioBuffer&&callback(node)},function(e){console.log("Could not decode audio data: "+e)})}audioCtx.createReverbFromBase64=function(audioBase64,callback){var reverbNode=audioCtx.createConvolver();return decodeAndSetupBuffer(reverbNode,decodeBase64ToArrayBuffer(audioBase64),callback),reverbNode},audioCtx.createSourceFromBase64=function(audioBase64,callback){var sourceNode=audioCtx.createBufferSource();return decodeAndSetupBuffer(sourceNode,decodeBase64ToArrayBuffer(audioBase64),callback),sourceNode},audioCtx.createReverbFromUrl=function(audioUrl,callback){console.log("Downloading impulse response from "+audioUrl);var reverbNode=audioCtx.createConvolver(),request=new XMLHttpRequest;return request.open("GET",audioUrl,!0),request.onreadystatechange=function(){4===request.readyState&&200===request.status&&(console.log("Downloaded impulse response"),decodeAndSetupBuffer(reverbNode,request.response,callback))},request.onerror=function(e){console.log("There was an error receiving the response: "+e),reverbjs.networkError=e},request.responseType="arraybuffer",request.send(),reverbNode},audioCtx.createSourceFromUrl=function(audioUrl,callback){console.log("Downloading sound from "+audioUrl);var sourceNode=audioCtx.createBufferSource(),request=new XMLHttpRequest;return request.open("GET",audioUrl,!0),request.onreadystatechange=function(){4===request.readyState&&200===request.status&&(console.log("Downloaded sound"),decodeAndSetupBuffer(sourceNode,request.response,callback))},request.onerror=function(e){console.log("There was an error receiving the response: "+e),reverbjs.networkError=e},request.responseType="arraybuffer",request.send(),sourceNode},audioCtx.createReverbFromBase64Url=function(audioUrl,callback){console.log("Downloading base64 impulse response from "+audioUrl);var reverbNode=audioCtx.createConvolver(),request=new XMLHttpRequest;return request.open("GET",audioUrl,!0),request.onreadystatechange=function(){4===request.readyState&&200===request.status&&(console.log("Downloaded impulse response"),decodeAndSetupBuffer(reverbNode,decodeBase64ToArrayBuffer(request.response),callback))},request.onerror=function(e){console.log("There was an error receiving the response: "+e),reverbjs.networkError=e},request.send(),reverbNode},audioCtx.createSourceFromBase64Url=function(audioUrl,callback){console.log("Downloading base64 sound from "+audioUrl);var sourceNode=audioCtx.createBufferSource(),request=new XMLHttpRequest;return request.open("GET",audioUrl,!0),request.onreadystatechange=function(){4===request.readyState&&200===request.status&&(console.log("Downloaded sound"),decodeAndSetupBuffer(sourceNode,decodeBase64ToArrayBuffer(request.response),callback))},request.onerror=function(e){console.log("There was an error receiving the response: "+e),reverbjs.networkError=e},request.send(),sourceNode}}};
+            reverbjs.extend(audioCtx);
 
+            // 2) Load the impulse response; upon load, connect it to the audio output.
+            //const reverbUrl = "http://reverbjs.org/Library/ArbroathAbbeySacristy.m4a";
+            var reverbUrl = "http://reverbjs.org/Library/ElvedenHallMarbleHall.m4a";
+            
+ 
             //Filter
             const filter = audioCtx.createBiquadFilter();
             filter.type = "highshelf"
@@ -52,21 +53,37 @@ const exports = {
             filter.gain.value = -5;
 
             //Gain
+            const wetGain = audioCtx.createGain()
+            wetGain.gain.value = 0.9
             const gain = audioCtx.createGain();
             const gain_inst = audioCtx.createGain();
-            gain_inst.gain.value = 0.9;
+            gain_inst.gain.value = 0.8;
+
             //Panner
             const stereoPanner = audioCtx.createStereoPanner();
         
+            //vocalchain
             vocalTrack.connect(stereoPanner);
             stereoPanner.connect(filter);
             filter.connect(gain);
             gain.connect(audioCtx.destination);
 
+            //successchain
             successTrack.connect(audioCtx.destination);
+
+            //reverbchain
+            const reverbNode = audioCtx.createReverbFromUrl(reverbUrl, function() {
+                wetTrack.connect(reverbNode);
+                reverbNode.connect(wetGain);
+                wetGain.connect(audioCtx.destination)
+    
+            });
+
+
+            //instchain
             track.connect(gain_inst);
             gain_inst.connect(audioCtx.destination);
-            return { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, vocalElement, successElement, listener };
+            return { viewer, stereoPanner, filter, gain, wetGain, audioCtx, audioElement, vocalElement, wetElement, successElement, listener };
         },
         setMarker(viewer, latitude, longitude, id) {
             viewer.activateComponent("marker");
@@ -155,14 +172,24 @@ const exports = {
 
         },
 
-        setGain(gain, audioCtx, angle){
-            let s = -0.8/90
+        setGain(gain, wetGain, audioCtx, angle){
+            let s = -0.5/90
             //let s = (0.2-0.5)/90
             let input = Math.abs(angle)
             if (input >90){
                 let output = 1 + s *(input-90)
-                gain.gain.setValueAtTime(output, audioCtx.currentTime)
+                console.log(output)
+                gain.gain.value *= output;
+                wetGain.gain.value *= output;
+
             }
+
+        },
+
+        setReverb(gain, wetGain, dist, targetDist){
+            const frac = dist/targetDist;
+            gain.gain.value = 1-frac;
+            wetGain.gain.value = (1-gain.gain.value)*0.7;
 
         },
 
