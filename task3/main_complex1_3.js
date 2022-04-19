@@ -106,7 +106,7 @@ initPromise.then(function(){
                         const angle = E.funcs.calcAngle2(listener, bearing, cp)
                         E.funcs.setStereoPannerPos2(stereoPanner, audioCtx, angle)
                         E.funcs.setFilterCutoff(filter, audioCtx, angle);
-                        E.funcs.setGain(gain, audioCtx, angle)
+                        E.funcs.setGain(gain, wetGain, audioCtx, angle)
                         //console.log(`The angle is: ${angle}`);
                         })
                 
@@ -128,7 +128,7 @@ initPromise.then(function(){
         E.funcs.setStereoPannerPos2(stereoPanner, audioCtx, angle);
         console.log(`The angle is: ${angle}`);
         E.funcs.setFilterCutoff(filter, audioCtx, angle);
-        E.funcs.setGain(gain, audioCtx, angle)
+        E.funcs.setGain(gain, wetGain, audioCtx, angle)
     });
 
     //Button to play/pause audio
