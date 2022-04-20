@@ -10,8 +10,12 @@ function download(content, filename){
   }
 
 document.getElementById("download").onclick = function(){
-
-    download(result, 'res.json')
+    fname = JSON.stringify(result.email)
+    download(result, fname)
     localStorage.clear()
     
+}
+document.getElementById("survey").onclick = function(){
+  window.location = "https://docs.google.com/forms/d/e/1FAIpQLSevUNB3lHH2yzvmZ8pxuGN0RSWhdykNlwPaWQTytGdq8ggh6A/viewform?usp=sf_link";
+  
 }

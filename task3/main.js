@@ -89,6 +89,7 @@ viewer.on('position', event => {
             let time = Math.floor((performance.now() - startTime)/1000)
             result.task3.time = time;
             result.task3.completed = true;
+            result.task3.visited = visited;
             window.localStorage.setItem("result", JSON.stringify(result));
             audioElement.pause()
             successElement.play()
