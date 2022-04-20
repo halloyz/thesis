@@ -27,24 +27,34 @@
     rel="stylesheet"
   />
   <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
+  <link rel="stylesheet" href="styles2.css"/>
+
 
 </head>
 <body>
-  <div id="map-container">
-    <div id="map" style="height: 0vh;"> 
+  <header id="toolbar">
+    <div id="instructions">
+      <p>The singer is at the destination! Find your own way there!</p>
     </div>
-  <div id="toolbar">
-    <button id= "start">play/pause music</button>
-    <input type="checkbox" id="markers" name="markers" checked>
-    <label for="markers" >show markers</label>
+    <div id="startButton">
+      <button id= "start">Play/pause music</button>
+    <button id= "lost">I give up.</button><br>
+    <label for="start" id="startLabel"></label>
+  </div>      
+
+    <input type="checkbox" id="markers" name="markers" style="display: none;">
+    <label for="markers" style="display: none;">show markers</label>
+  </header>
+
+  <div id="map-container">
+    <div id="map"> 
   </div>
 
-    <div id="mly" style="height: 90vh;">
-      
-      <script src="main.js"></script>
-    </div>
-    
-  
+
+  <div id="mly" style="height:90vh;">
+    <script src="main.js"></script>
+
+  </div>
     
 </body>
 </html>

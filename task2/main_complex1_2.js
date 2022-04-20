@@ -22,7 +22,7 @@ L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
 const c = result.case;
 const E = window.exports;
 let { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, vocalElement, successElement, listener } = E.funcs.initialize(cases[c].task2.imageId);
-//E.funcs.setMarker(viewer, cases[c].task2.targetLat, cases[c].task2.targetLng, "target");
+E.funcs.setMarker(viewer, cases[c].task2.targetLat, cases[c].task2.targetLng, "target");
 
 // Get route
 const checkpoints = []
@@ -32,8 +32,8 @@ const initPromise = new Promise(function(resolve,reject){
         .then (async function (pos){
             const p = await pos;
             map.setView([p.lat, p.lng]);
-            posMarker = L.marker([p.lat,p.lng], {icon: L.mapquest.icons.circle({primaryColor: '#FF0000',
-            })}).addTo(map)
+            posMarker = L.marker([p.lat,p.lng], {icon: L.mapquest.icons.circle({primaryColor: '#0000FF',
+            })}).bindTooltip("You are here").addTo(map)
             E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat)
             E.funcs.getRoute(p.lng, p.lat, cases[c].task2.targetLng, cases[c].task2.targetLat)
             
@@ -44,7 +44,7 @@ const initPromise = new Promise(function(resolve,reject){
                     .addTo(map)
                 markers.push(m)
                 }
-                E.funcs.setMarker(viewer, checkpoints[1].lat, checkpoints[1].lng, "cp")
+                // E.funcs.setMarker(viewer, checkpoints[1].lat, checkpoints[1].lng, "cp")
                 cp = checkpoints[current+1];
                 viewer.getBearing()
                 .then(bearing => E.funcs.calcAngle2(listener,bearing,checkpoints[1]))
@@ -87,7 +87,8 @@ initPromise.then(function(){
 
                     if (current === checkpoints.length-1){ //If current checkpoint is the final checkpoint, we made it 
                         let time = Math.floor((performance.now() - startTime)/1000)
-                        result.task2 = time
+                        result.task2.time = time;
+                        result.task2.completed = true;
                         window.localStorage.setItem("result", JSON.stringify(result));
                         audioElement.pause()
                         successElement.play()
@@ -98,7 +99,7 @@ initPromise.then(function(){
                     }
                 }
                 cp = checkpoints[current+1]
-                E.funcs.setMarker(viewer, cp.lat, cp.lng, "cp");
+                // E.funcs.setMarker(viewer, cp.lat, cp.lng, "cp");
 
                 viewer.getBearing()//The angle relative to the speaker changes with listener position also, so we need to update that as well
                     .then(bearing => {
@@ -136,11 +137,14 @@ initPromise.then(function(){
         if (audioElement.paused || !audioElement.currentTime) {
             audioElement.play()
             vocalElement.play()
-                .then(() => console.log("Playback started!"))
+                // .then(() => console.log("Playback started!"))
+                .then(() => document.getElementById("startLabel").innerHTML = "Playback started!")
+
                 .catch(e => console.error("Playback failed"));
         } else {
             audioElement.pause();
             vocalElement.pause();
+            document.getElementById("startLabel").innerHTML = "Playback paused!";
 
         }
     };
@@ -153,5 +157,9 @@ initPromise.then(function(){
         viewer.deactivateComponent('marker');
     }
     });
+
+    document.getElementById("lost").onclick = function(){
+        E.funcs.showMap(result,map);
+    }
 
 });

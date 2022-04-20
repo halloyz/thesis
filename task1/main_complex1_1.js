@@ -31,8 +31,8 @@ const initPromise = new Promise(function(resolve,reject){
         .then (async function (pos){
             const p = await pos;
             map.setView([p.lat, p.lng]);
-            posMarker = L.marker([p.lat,p.lng], {icon: L.mapquest.icons.circle({primaryColor: '#FF0000',
-            })}).addTo(map)
+            posMarker = L.marker([p.lat,p.lng], {icon: L.mapquest.icons.circle({primaryColor: '#0000FF',
+            })}).bindTooltip("You are here").addTo(map)
             E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat)
             E.funcs.getRoute(p.lng, p.lat, cases[c].task1.targetLng, cases[c].task1.targetLat)
             
@@ -43,7 +43,7 @@ const initPromise = new Promise(function(resolve,reject){
                     .addTo(map)
                 markers.push(m)
                 }
-                E.funcs.setMarker(viewer, checkpoints[1].lat, checkpoints[1].lng, "cp")
+                // E.funcs.setMarker(viewer, checkpoints[1].lat, checkpoints[1].lng, "cp")
                 viewer.getBearing()
                 .then(bearing => E.funcs.calcAngle2(listener,bearing,checkpoints[1]))
                 .then(angle => E.funcs.setStereoPannerPos2(stereoPanner,audioCtx,angle))
@@ -88,7 +88,7 @@ initPromise.then(function(){
                         console.log(`The angle is: ${angle}`);
                         })
                 
-                E.funcs.setMarker(viewer, cp.lat, cp.lng, "cp");
+                // E.funcs.setMarker(viewer, cp.lat, cp.lng, "cp");
                 if (!checkbox.checked){
                     viewer.deactivateComponent('marker');
                 }
@@ -100,7 +100,8 @@ initPromise.then(function(){
                     
                     if (current === checkpoints.length-1){
                         let time = Math.floor((performance.now() - startTime)/1000)
-                        result.task1 = time
+                        result.task1.time = time;
+                        result.task1.completed = true;
                         window.localStorage.setItem("result", JSON.stringify(result));
                         audioElement.pause()
                         successElement.play()
@@ -129,10 +130,13 @@ initPromise.then(function(){
     document.getElementById("start").onclick = event => {
         if (audioElement.paused || !audioElement.currentTime) {
             audioElement.play()
-                .then(() => console.log("Playback started!"))
+                // .then(() => console.log("Playback started!"))
+                .then(() => document.getElementById("startLabel").innerHTML = "Playback started!")
+
                 .catch(e => console.error("Playback failed"));
         } else {
             audioElement.pause();
+            document.getElementById("startLabel").innerHTML = "Playback paused!";
 
         }
     };
@@ -146,4 +150,7 @@ initPromise.then(function(){
     }
     });
 
+    document.getElementById("lost").onclick = function(){
+        E.funcs.showMap(result,map);
+    }
 });

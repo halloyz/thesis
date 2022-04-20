@@ -275,7 +275,19 @@ const exports = {
             const lp_ = Math.sqrt((lp.x*lp.x+lp.y*lp.y));
             return lp_;
 
+        },
+        showMap(result, map){
+            let mapid = document.getElementById("map");
+            let mly = document.getElementById("mly");
+            let confirmFail = confirm("Are you sure? Please only press 'Yes' if you are sure you cannot complete the task. Then, a regular map will be shown.");
+            if (confirmFail){
+                mapid.style.height = "45vh";
+                mly.style.height = "45vh";
+                map.invalidateSize();
+                result.task2.failed = true;
+            }
         }
+        
     }
 };
 

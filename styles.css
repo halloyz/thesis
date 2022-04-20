@@ -9,3 +9,29 @@
     height: inherit;
     width: inherit;
 }
+body
+{display:flex;
+padding: 2em;
+flex-direction: column;
+align-items: center;
+font-family: 'Times New Roman', Times, serif;
+
+}
+
+.box{display: flex; background:white;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 800px;
+    height: 800px;
+    }
+h2{
+    font-style: italic;
+    font-size: medium;
+    font-weight: normal;
+}
+
+ul{
+    text-align: left;
+}

@@ -11,9 +11,9 @@
     <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
     <script src="ors-js-client.js"></script>
 
-    <audio id="music" src=media/music_cropped.mp3></audio>
-    <audio id="vocals" src=media/vocals_cropped.mp3></audio>
-    <audio id="success" src="media/success.mp3" preload="auto"></audio>
+    <audio loop id="music" src=media/music_cropped.mp3></audio>
+    <audio loop id="vocals" src=media/vocals_cropped.mp3></audio>
+    <audio loop id="success" src="media/success.mp3" preload="auto"></audio>
     <!-- <script src= "https://halloyz.github.io/thesis/cases.js"></script> -->
     <script src="../cases.js"></script>
     <script src="functions1_2.js"></script>
@@ -22,24 +22,37 @@
     rel="stylesheet"
   />
   <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
+  <link rel="stylesheet" href="styles.css"/>
+
 
 </head>
 <body>
-  <div id="map-container">
-    <div id="map" style="height: 50vh;"> 
+  <header id="toolbar">
+    <div id="instructions">
+      <p>Task 2: Follow the <u>voice</u> as it moves along the route!</p>
     </div>
-  <div id="toolbar">
-    <button id= "start">play/pause music</button>
-    <input type="checkbox" id="markers" name="markers" checked>
-    <label for="markers" >show markers</label>
+    <div id="startButton">
+      <button id= "start">Play/pause music</button>
+    <button id= "lost">I give up.</button><br>
+    <label for="start" id="startLabel"></label>
+  </div>      
+
+    <input type="checkbox" id="markers" name="markers" style="display: none;">
+    <label for="markers" style="display: none;">show markers</label>
+  </header>
+
+  <div id="map-container">
+    <div id="map"> 
   </div>
 
-    <div id="mly" style="height: 50vh;">
-      
-      <script src="main_complex1_2.js"></script>
-    </div>
-    
-  
+
+  <div id="mly" style="height:90vh;">
+    <script src="main_complex1_2.js"></script>
+
+  </div>
+
+
+
     
 </body>
 </html>

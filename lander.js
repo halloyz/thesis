@@ -9,7 +9,7 @@ function getRandomKey(obj) {
 //const cases = window.cases;
 const usercase = getRandomKey(cases);
 
-let result = {case: usercase, email: null, task1: null}
+let result = {case: usercase, email: null, task1: {completed: false, failed: false}, task2: {completed: false, failed: false}, task3: {completed: false, failed: false}}
 
 document.getElementById("proceed").onclick = function(){
     result.email = document.getElementById("email").value

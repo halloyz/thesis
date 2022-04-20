@@ -2,9 +2,28 @@
 
 
 /* optional */
-header {display: flex; height:7vh; background:white;
-justify-content: center;
-align-items: center;
+header {display: grid; height:7vh; background:white;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+button{
+    margin:5px;
+}
+
+label {
+    display: inline;
+    margin-top: 5px;
+    vertical-align: bottom;
+    text-align: left;
+}
+
+#instructions {
+margin-left:10px;
+justify-content: flex-start;
+color: rgb(255, 89, 0);
+font-size: large;
+}
+#startButton{
+align-self:center;
 text-align: center;
 
 }

@@ -42,7 +42,8 @@ const exports = {
 
             // 2) Load the impulse response; upon load, connect it to the audio output.
             //const reverbUrl = "http://reverbjs.org/Library/ArbroathAbbeySacristy.m4a";
-            var reverbUrl = "http://reverbjs.org/Library/ElvedenHallMarbleHall.m4a";
+            // var reverbUrl = "http://reverbjs.org/Library/ElvedenHallMarbleHall.m4a";
+            const reverbUrl = "media/ir.wav"
             
  
             //Filter
@@ -51,6 +52,10 @@ const exports = {
             const hipass_freq = 20000;
             filter.frequency.value = hipass_freq;
             filter.gain.value = -5;
+
+            const wetFilter = audioCtx.createBiquadFilter();
+            wetFilter.type = "lowpass";
+            wetFilter.frequency.value = 20000;
 
             //Gain
             const wetGain = audioCtx.createGain()
@@ -74,8 +79,9 @@ const exports = {
             //reverbchain
             const reverbNode = audioCtx.createReverbFromUrl(reverbUrl, function() {
                 wetTrack.connect(reverbNode);
+                // reverbNode.connect(wetFilter);
                 reverbNode.connect(wetGain);
-                wetGain.connect(audioCtx.destination)
+                wetGain.connect(audioCtx.destination);
     
             });
 
@@ -299,6 +305,17 @@ const exports = {
             const lp_ = Math.sqrt((lp.x*lp.x+lp.y*lp.y));
             return lp_;
 
+        },
+        showMap(result, map){
+            let mapid = document.getElementById("map");
+            let mly = document.getElementById("mly");
+            let confirmFail = confirm("Are you sure? Please only press 'Yes' if you are sure you cannot complete the task. Then, a regular map will be shown.");
+            if (confirmFail){
+                mapid.style.height = "45vh";
+                mly.style.height = "45vh";
+                map.invalidateSize();
+                result.task3.failed = true;
+            }
         }
     }
 };
