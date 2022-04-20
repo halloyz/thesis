@@ -1,5 +1,11 @@
-let startTime = 0;
-let endTime = 0;
+let startTime = 0
+let endTime = 0
+
+let t1;
+let t2;
+let visited = [];
+let startPos;
+let p1;
 let result = window.localStorage.getItem(("result"));
 result = JSON.parse(result);
 let current = 0; //Keeps track of current checkpoint index, (initial: 0)
@@ -31,6 +37,7 @@ E.funcs.setMarker(viewer, cases[c].task2.targetLat, cases[c].task2.targetLng, "t
 viewer.getPosition().then(function(pos){
     startTime = performance.now();
     const p = pos;
+    startPos = p;
     E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat)
     targetDist = E.funcs.dist(listener, target)
     E.funcs.setReverb(gain,wetGain,targetDist,targetDist)
@@ -60,7 +67,20 @@ const resumeIfSuspended = () => {
 viewer.on('position', event => {
     resumeIfSuspended();
     viewer.getPosition().then(function(position){
-        const p = position;
+        let duration;
+        let p = position;
+        if (!t1){
+            t1 = performance.now();
+            duration = t1-startTime;
+            visited.push([startPos.lat, startPos.lng, duration/10000])
+        }
+        else{
+            t2 = performance.now();
+            duration = t2-t1
+            visited.push([p1.lat, p1.lng, duration/10000])
+            t1 = t2;
+        }
+        p1 = p;
         posMarker.setLatLng([p.lat, p.lng])
         E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat);
         dist = E.funcs.dist(listener, target);

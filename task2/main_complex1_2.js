@@ -1,5 +1,12 @@
 let startTime = 0
 let endTime = 0
+
+let t1;
+let t2;
+let visited = [];
+let startPos;
+let p1;
+
 let result = window.localStorage.getItem(("result"));
 result = JSON.parse(result)
 let current = 0; //Keeps track of current checkpoint index, (initial: 0)
@@ -31,6 +38,7 @@ const initPromise = new Promise(function(resolve,reject){
     viewer.getPosition()
         .then (async function (pos){
             const p = await pos;
+            startPos = p;
             map.setView([p.lat, p.lng]);
             posMarker = L.marker([p.lat,p.lng], {icon: L.mapquest.icons.circle({primaryColor: '#0000FF',
             })}).bindTooltip("You are here").addTo(map)
@@ -73,12 +81,25 @@ initPromise.then(function(){
         resumeIfSuspended();
         viewer.getPosition()
             .then(function(position){
+                let duration;
                 let p = position;
+                if (!t1){
+                    t1 = performance.now();
+                    duration = t1-startTime;
+                    visited.push([startPos.lat, startPos.lng, duration/10000])
+                }
+                else{
+                    t2 = performance.now();
+                    duration = t2-t1
+                    visited.push([p1.lat, p1.lng, duration/10000])
+                    t1 = t2;
+                }
+                p1 = p;
                 posMarker.setLatLng([p.lat, p.lng])
                 E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat);
 
                 let dist = E.funcs.dist(listener, cp)
-                console.log(`Distance:  ${dist}`)
+                // console.log(`Distance:  ${dist}`)
                 if (dist < threshold){
                     console.log('Checkpoint updated!')
                     markers[current+1].setIcon(L.mapquest.icons.marker({primaryColor: '#FF0000',}))
@@ -89,6 +110,8 @@ initPromise.then(function(){
                         let time = Math.floor((performance.now() - startTime)/1000)
                         result.task2.time = time;
                         result.task2.completed = true;
+                        result.task2.visited = visited;
+
                         window.localStorage.setItem("result", JSON.stringify(result));
                         audioElement.pause()
                         successElement.play()

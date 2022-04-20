@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+    <script src= "leaflet-heat.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
+
+    <title>Document</title>
+</head>
+<body>
+    <div id="map-container">
+        <div id="map" style="height: 100vh;"> </div>
+      </div>
+    
+    <script>
+    L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
+
+    //We will use a map to see what is going on from above.
+    const map =L.mapquest.map('map', {
+    center: [55.680763888889, 12.560666666667],
+    // L.mapquest.tileLayer('map') is the MapQuest map tile layer
+    layers: L.mapquest.tileLayer('map'), 
+    zoom: 20
+    });
+    let result = JSON.parse(window.localStorage.getItem(("result")));
+
+    L.heatLayer(result.task1.visited,{radius: 10, max: 0.01}).addTo(map);
+
+    </script>
+    
+</body>
+</html>
