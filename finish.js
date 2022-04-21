@@ -1,4 +1,4 @@
-let result = window.localStorage.getItem(("result"));
+let result = window.localStorage.getItem("result");
 result = JSON.parse(result);
 function download(content, filename){
     const a = document.createElement('a') // Create "a" element
