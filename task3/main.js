@@ -102,7 +102,7 @@ viewer.on('position', event => {
         viewer.getBearing().then(function(bearing){
             const b = bearing * (Math.PI / 180);
             const angle = E.funcs.calcAngle2(listener,b,target)
-            console.log(`angle ${angle}`);
+            // console.log(`angle ${angle}`);
             E.funcs.setStereoPannerPos2(stereoPanner,audioCtx,angle)
             E.funcs.setFilterCutoff(filter, audioCtx, angle);
             E.funcs.setGain(gain, wetGain, audioCtx, angle)
