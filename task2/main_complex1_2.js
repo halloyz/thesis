@@ -29,6 +29,7 @@ L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
 const c = result.case;
 const E = window.exports;
 let { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, vocalElement, successElement, listener } = E.funcs.initialize(cases[c].task2.imageId);
+viewer.activateComponent('marker');
 E.funcs.setMarker(viewer, cases[c].task2.targetLat, cases[c].task2.targetLng, "target");
 
 // Get route

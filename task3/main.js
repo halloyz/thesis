@@ -31,6 +31,7 @@ let { viewer, stereoPanner, filter, gain, wetGain, audioCtx, audioElement, vocal
 const target = {lat: cases[c].task3.targetLat, lng: cases[c].task3.targetLng};
 let targetDist;
 let dist;
+viewer.activateComponent('marker');
 E.funcs.setMarker(viewer, cases[c].task2.targetLat, cases[c].task2.targetLng, "target");
 
 // This tells the audio module where to position the viewer
