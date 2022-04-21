@@ -195,7 +195,7 @@ const exports = {
         setReverb(gain, wetGain, dist, targetDist){
             const frac = dist/targetDist;
             gain.gain.value = 1-frac;
-            wetGain.gain.value = (1-gain.gain.value)*0.7;
+            wetGain.gain.value = (1-gain.gain.value)*0.6;
 
         },
 
