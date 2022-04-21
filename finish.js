@@ -16,6 +16,7 @@ document.getElementById("download").onclick = function(){
     
 }
 document.getElementById("survey").onclick = function(){
-  window.location = "https://docs.google.com/forms/d/e/1FAIpQLSevUNB3lHH2yzvmZ8pxuGN0RSWhdykNlwPaWQTytGdq8ggh6A/viewform?usp=sf_link";
+  // window.location = "https://docs.google.com/forms/d/e/1FAIpQLSevUNB3lHH2yzvmZ8pxuGN0RSWhdykNlwPaWQTytGdq8ggh6A/viewform?usp=sf_link";
+  window.open("https://docs.google.com/forms/d/e/1FAIpQLSevUNB3lHH2yzvmZ8pxuGN0RSWhdykNlwPaWQTytGdq8ggh6A/viewform?usp=sf_link");
   
 }

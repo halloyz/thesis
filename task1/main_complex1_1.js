@@ -29,7 +29,6 @@ let c = result.case;
 let E = window.exports;
 let { viewer, panner, stereoPanner, filter, gain, audioCtx, audioElement, successElement, listener } = E.funcs.initialize(cases[c].task1.imageId);
 viewer.activateComponent('marker');
-
 E.funcs.setMarker(viewer, cases[c].task1.targetLat, cases[c].task1.targetLng, "target");
 
 // Get route
