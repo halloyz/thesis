@@ -110,9 +110,9 @@ initPromise.then(function(){
                         })
                 
                 // E.funcs.setMarker(viewer, cp.lat, cp.lng, "cp");
-                if (!checkbox.checked){
-                    viewer.deactivateComponent('marker');
-                }
+                // if (!checkbox.checked){
+                //     viewer.deactivateComponent('marker');
+                // }
                 dist = E.funcs.dist(listener, cp)
                 if (dist < threshold){
                     markers[current+1].setIcon(L.mapquest.icons.marker({primaryColor: '#FF0000',

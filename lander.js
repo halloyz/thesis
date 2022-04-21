@@ -15,7 +15,7 @@ document.getElementById("proceed").onclick = function(){
     result.email = document.getElementById("email").value
     console.log(result)
     if (!result.email){
-      alert("Please enter your first and last name together, in the following format: 'FirstnameLastname'");
+      alert("Please input your first name and the initial letter of your last name (Example: DanielE)");
     }
     else{
     window.localStorage.setItem("result", JSON.stringify(result));

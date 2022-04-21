@@ -136,9 +136,9 @@ initPromise.then(function(){
                         })
                 
 
-                if (!checkbox.checked){
-                    viewer.deactivateComponent('marker');
-                }
+                // if (!checkbox.checked){
+                //     viewer.deactivateComponent('marker');
+                // }
 
 
             });
