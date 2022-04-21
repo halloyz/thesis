@@ -226,7 +226,7 @@ const exports = {
             return orsDirections.calculate({
               coordinates: [[startLng, startLat], [endLng, endLat]],
               //profile: "foot-walking",
-              profile: "driving-car",
+              profile: "cycling-regular",
               //extra_info: ["waytype", "steepness"],
               format: "geojson",
               preference: "recommended",
