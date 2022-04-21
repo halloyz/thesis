@@ -92,6 +92,7 @@ viewer.on('position', event => {
             result.task3.visited = visited;
             window.localStorage.setItem("result", JSON.stringify(result));
             audioElement.pause()
+            vocalElement.pause()
             successElement.play()
             alert("You made it!");
             //window.location.href = "https://halloyz.github.io/thesis/finish.html";

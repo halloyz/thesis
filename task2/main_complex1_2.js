@@ -114,6 +114,7 @@ initPromise.then(function(){
 
                         window.localStorage.setItem("result", JSON.stringify(result));
                         audioElement.pause()
+                        vocalElement.pause()
                         successElement.play()
                         alert("You made it!");
                         //window.location.href = "https://halloyz.github.io/thesis/task3/instructions.html";
