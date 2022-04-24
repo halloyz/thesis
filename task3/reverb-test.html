@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" href="#">
+    <script src="https://unpkg.com/mapillary-js@4.0.0/dist/mapillary.js"></script>
+    <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+    <script src="ors-js-client.js"></script>
+
+    <audio  loop id="music" src=media/music_cropped.mp3></audio>
+    <audio  loop id="vocals" src=media/vocals_cropped.mp3></audio>
+    <audio  loop id="vocals2" src=media/vocals_cropped2.mp3></audio>
+
+  
+
+
+    <audio id="success" src="media/success.mp3" preload="auto"></audio>
+    <!-- <script src= "https://halloyz.github.io/thesis/cases.js"></script> -->
+    <script src="../cases.js"></script>
+    <script src="functions1_3.js"></script>
+
+</head>
+<body>
+    <h1>Daniels Reverbskola</h1>
+    <button id= "start">No reverb</button>
+    <button id= "reverbstart">Reverb</button><br>
+    <div id="map-container">
+        <div id="map"> 
+      </div>
+    
+    
+      <div id="mly" style="visibility: hidden;">
+    
+    <script>
+        let c = 'case1';
+        const E = window.exports;
+        let { viewer, stereoPanner, filter, gain, wetGain, audioCtx, audioElement, vocalElement, wetElement, successElement, listener } = E.funcs.initialize(cases[c].task3.imageId);
+
+    document.getElementById("start").onclick = event => {
+    if (audioElement.paused || !audioElement.currentTime) {
+        wetElement.pause();
+        vocalElement.play()
+
+    } else {
+        vocalElement.pause();
+
+
+    }
+}
+
+document.getElementById("reverbstart").onclick = event => {
+    if (wetElement.paused || !wetElement.currentTime) {
+        vocalElement.pause()
+        wetElement.play()
+            .then(() => console.log("Playback started!"))
+            .catch(e => console.error("Playback failed"));
+    } else {
+
+        wetElement.pause();
+
+    }
+    
+}
+
+</script>
+</body>
+</html>
