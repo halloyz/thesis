@@ -45,11 +45,14 @@
             .catch(() => console.error("Could not resume"));
     }
 };
+    resumeIfSuspended();
     document.getElementById("start").onclick = event => {
     if (vocalElement.paused || !vocalElement.currentTime) {
         resumeIfSuspended();
         wetElement.pause();
         vocalElement.play()
+            .then(() => console.log("Playback started!"))
+            .catch(e => console.error("Playback failed"));
 
     } else {
         vocalElement.pause();
