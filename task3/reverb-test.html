@@ -38,9 +38,16 @@
         let c = 'case1';
         const E = window.exports;
         let { viewer, stereoPanner, filter, gain, wetGain, audioCtx, audioElement, vocalElement, wetElement, successElement, listener } = E.funcs.initialize(cases[c].task3.imageId);
-
+    const resumeIfSuspended = () => {
+    if (audioCtx.state === "suspended") {
+        audioCtx.resume()
+            .then(() => console.log("Resumed"))
+            .catch(() => console.error("Could not resume"));
+    }
+};
     document.getElementById("start").onclick = event => {
-    if (audioElement.paused || !audioElement.currentTime) {
+    if (vocalElement.paused || !vocalElement.currentTime) {
+        resumeIfSuspended();
         wetElement.pause();
         vocalElement.play()
 
@@ -53,6 +60,7 @@
 
 document.getElementById("reverbstart").onclick = event => {
     if (wetElement.paused || !wetElement.currentTime) {
+        resumeIfSuspended();
         vocalElement.pause()
         wetElement.play()
             .then(() => console.log("Playback started!"))
@@ -64,6 +72,7 @@ document.getElementById("reverbstart").onclick = event => {
     }
     
 }
+
 
 </script>
 </body>
