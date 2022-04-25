@@ -193,9 +193,17 @@ const exports = {
         },
 
         setReverb(gain, wetGain, dist, targetDist){
-            const frac = dist/targetDist;
-            gain.gain.value = 1-frac;
+            // console.log(`dist: ${dist}`)
+            // console.log(`targetDist: ${targetDist}`)
+
+            let frac = dist/targetDist;
+            let thresh = (frac > 0.8) ? 0.8 : frac;
+            console.log(`thresh: ${thresh}`)
+
+            gain.gain.value = 1-thresh;
+            console.log(`gain: ${gain.gain.value}`)
             wetGain.gain.value = (1-gain.gain.value)*0.6;
+            console.log(`wetGain: ${wetGain.gain.value}`)
 
         },
 

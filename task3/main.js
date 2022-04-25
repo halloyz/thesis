@@ -25,23 +25,26 @@ L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
 });
 
 // Initialize the viewer (calls the constructor in functions.js)
-const c = result.case;
+// const c = result.case;
+const c = 'case2'
 const E = window.exports;
 let { viewer, stereoPanner, filter, gain, wetGain, audioCtx, audioElement, vocalElement, wetElement, successElement, listener } = E.funcs.initialize(cases[c].task3.imageId);
 const target = {lat: cases[c].task3.targetLat, lng: cases[c].task3.targetLng};
 let targetDist;
 let dist;
 viewer.activateComponent('marker');
-E.funcs.setMarker(viewer, cases[c].task2.targetLat, cases[c].task2.targetLng, "target");
+E.funcs.setMarker(viewer, cases[c].task3.targetLat, cases[c].task3.targetLng, "target");
 
 // This tells the audio module where to position the viewer
 viewer.getPosition().then(function(pos){
     startTime = performance.now();
-    const p = pos;
+    let p = pos;
     startPos = p;
-    E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat)
+    E.funcs.setListenerPos(listener, audioCtx, p.lng, p.lat);
     targetDist = E.funcs.dist(listener, target)
-    E.funcs.setReverb(gain,wetGain,targetDist,targetDist)
+    dist = E.funcs.dist(listener, target)
+
+    // E.funcs.setReverb(gain,wetGain,targetDist,targetDist)
 
     posMarker = L.marker([p.lat,p.lng], {icon: L.mapquest.icons.circle({primaryColor: '#0000FF',})}).bindTooltip("You are here").addTo(map);
     let targetMarker = L.marker([target.lat, target.lng]).addTo(map);
