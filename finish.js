@@ -1,5 +1,5 @@
-let result = window.localStorage.getItem("result");
-result = JSON.parse(result);
+let result = window.localStorage.getItem("result"); //result is already stringified here
+// result = JSON.parse(result); Fix this
 function download(content, filename){
     const a = document.createElement('a') // Create "a" element
     const blob = new Blob([JSON.stringify(content)], {type: 'application/json'}) // Create a blob (file-like object)
@@ -10,7 +10,7 @@ function download(content, filename){
   }
 
 document.getElementById("download").onclick = function(){
-    fname = JSON.stringify(result.email)
+    let fname = JSON.stringify(result.email)
     download(result, fname)
     localStorage.clear()
     
