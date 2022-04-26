@@ -25,8 +25,8 @@ L.mapquest.key = 'NePvDdAo6FWQ7Q9oc5G7B2caoYXN876p';
 });
 
 // Initialize the viewer (calls the constructor in functions.js)
-// const c = result.case;
-const c = 'case2'
+const c = result.case;
+// const c = 'case4'
 const E = window.exports;
 let { viewer, stereoPanner, filter, gain, wetGain, audioCtx, audioElement, vocalElement, wetElement, successElement, listener } = E.funcs.initialize(cases[c].task3.imageId);
 const target = {lat: cases[c].task3.targetLat, lng: cases[c].task3.targetLng};
