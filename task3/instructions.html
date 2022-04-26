@@ -5,6 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles.css"/>
+    <link rel="shortcut icon" href="#">
+    <script src="https://unpkg.com/mapillary-js@4.0.0/dist/mapillary.js"></script>
+    <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+    <script src="ors-js-client.js"></script>
+
+    <audio  loop id="music" src=media/music_cropped.mp3></audio>
+    <audio  loop id="vocals" src=media/vocals_cropped-dry.mp3></audio>
+    <audio  loop id="vocals2" src=media/vocals_cropped2.mp3></audio>
+
+  
+
+
+    <audio id="success" src="media/success.mp3" preload="auto"></audio>
+    <!-- <script src= "https://halloyz.github.io/thesis/cases.js"></script> -->
+    <script src="../cases.js"></script>
+    <script src="functions1_3.js"></script>
 
     <title>Navigating by Ear</title>
 
@@ -13,13 +29,18 @@
     <div class="box">
         <h1>Task 3</h1>
         <p>Good job! This time, you will once again follow the singer's voice.
-            However, unlike the previous two tasks, there will be no checkpoints.
+            However, unlike the previous two tasks, <b>there will be no checkpoints</b>.
             Instead, the vocals will be coming directly from the destination, so 
             you will have to find your own way there! (This means you may run into a dead end
         if you are unlucky but don't worry, you can always go back and find another way). <b>The voice will sound 
-        distant at first, but as you approach your target, it will
-            begin to sound closer to you to indicate you are on the right track</b>. </p>
+        distant at first (like a concert playing in another part of town), but as you approach your target, it will
+            begin to sound closer to you to indicate you are on the right track</b>.</p>
             <img src="media/task3.png" style="width:30%">
+        <p>To get an idea of what this sounds like, you can try out the buttons below (press to play/pause).</p>
+        <div style="display:inline">
+        <button id= "reverbstart">Distant</button>
+        <button id= "start">Close</button>
+    </div>
         <p>Once again you will have unlimited time but if you still find the task too difficult, 
             you may press the "I give up" button and you will be guided by a map instead.</p>
         <p>Press "Start" whenever you are ready to proceed.</p>
@@ -27,6 +48,56 @@
         <button type="button" id="start" onclick="window.location.href='main_complex1_3.html';">Start</button> 
     
     </div>
-</div>
+    <div id="map-container">
+        <div id="map"> 
+      </div>
+    
+    
+      <div id="mly" style="visibility: hidden;">
+    
+    <script>
+        let c = 'case1';
+        const E = window.exports;
+        let { viewer, stereoPanner, filter, gain, wetGain, audioCtx, audioElement, vocalElement, wetElement, successElement, listener } = E.funcs.initialize(cases[c].task3.imageId);
+    const resumeIfSuspended = () => {
+    if (audioCtx.state === "suspended") {
+        audioCtx.resume()
+            .then(() => console.log("Resumed"))
+            .catch(() => console.error("Could not resume"));
+    }
+};
+    resumeIfSuspended();
+    document.getElementById("start").onclick = event => {
+    if (vocalElement.paused || !vocalElement.currentTime) {
+        resumeIfSuspended();
+        wetElement.pause();
+        vocalElement.play()
+            .then(() => console.log("Playback started!"))
+            .catch(e => console.error("Playback failed"));
+
+    } else {
+        vocalElement.pause();
+
+
+    }
+}
+
+document.getElementById("reverbstart").onclick = event => {
+    if (wetElement.paused || !wetElement.currentTime) {
+        resumeIfSuspended();
+        vocalElement.pause()
+        wetElement.play()
+            .then(() => console.log("Playback started!"))
+            .catch(e => console.error("Playback failed"));
+    } else {
+
+        wetElement.pause();
+
+    }
+    
+}
+
+
+</script>
 </body>
 </html>
