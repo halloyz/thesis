@@ -12,10 +12,11 @@ function download(content, filename){
 
 document.getElementById("download").onclick = function(){
     download(result, fname)
-    localStorage.clear()
+    
     
 }
 document.getElementById("survey").onclick = function(){
+  localStorage.clear()
   // window.location = "https://docs.google.com/forms/d/e/1FAIpQLSevUNB3lHH2yzvmZ8pxuGN0RSWhdykNlwPaWQTytGdq8ggh6A/viewform?usp=sf_link";
   window.open("https://docs.google.com/forms/d/e/1FAIpQLSevUNB3lHH2yzvmZ8pxuGN0RSWhdykNlwPaWQTytGdq8ggh6A/viewform?usp=sf_link");
   
