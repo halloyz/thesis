@@ -173,7 +173,7 @@ const exports = {
             if (input > 90){
                 let output = 20000 + s * (input-90)
                 filter.frequency.setValueAtTime(output, audioCtx.currentTime)
-                console.log(`Filter frequency: ${output}`);
+                // console.log(`Filter frequency: ${output}`);
             }
 
         },
@@ -184,7 +184,7 @@ const exports = {
             let input = Math.abs(angle)
             if (input >90){
                 let output = 1 + s *(input-90)
-                console.log(output)
+                // console.log(output)
                 gain.gain.value *= output;
                 wetGain.gain.value *= output;
 
