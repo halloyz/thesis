@@ -29,7 +29,7 @@
     });
    
 
-    $.getJSON("test3_Daniel.json", function(data) {
+    $.getJSON("GillH.json", function(data) {
         result = JSON.parse(data);
         L.heatLayer(result.task1.visited,{radius: 10, max: 0.01}).addTo(map);
         L.heatLayer(result.task2.visited,{radius: 10, max: 0.01}).addTo(map);
