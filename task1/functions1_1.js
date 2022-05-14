@@ -50,10 +50,10 @@ const exports = {
 
             //Filter
             const filter = audioCtx.createBiquadFilter();
-            filter.type = "lowshelf"
+            filter.type = "highshelf"
             const hipass_freq = 20000;
             filter.frequency.value = hipass_freq;
-            filter.gain.value = -2.5;
+            filter.gain.value = -5;
 
             //Gain
             const gain = audioCtx.createGain();
@@ -155,6 +155,7 @@ const exports = {
             }
 
         },
+
 
         setGain(gain, audioCtx, angle){
             let s = -0.8/90
