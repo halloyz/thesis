@@ -17,7 +17,10 @@ document.getElementById("proceed").onclick = function(){
     if (!result.email){
       alert("Please input your first name and the initial letter of your last name (Example: DanielE)");
     }
-    else{
+    else if (!Boolean(window.chrome)){
+      alert("To participate in the experiment, please make sure you are using a recently updated version of Google Chrome.");
+
+    }else {
     window.localStorage.setItem("result", JSON.stringify(result));
     window.location.href = "task1/instructions.html";
     }
